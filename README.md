@@ -68,7 +68,9 @@ the check.
 
 - **What a party is.** `PartyId` is printable ASCII with no spaces until the
   roster settles it. That is narrow on purpose: allowing more later breaks no
-  id already written, and allowing less would.
+  id already written, and allowing less would. It holds an id, never a display
+  name. Every id the Slack module writes fits it (Slack's own `U…`, `T…:U…`,
+  `B…`, and agent ids like `slack:c0`).
 - **How a node becomes bytes.** There is no `toJson` yet. The line mints a
   `TurnId` by hashing a node, and a `SemanticAnchor` by hashing its shape and
   identity fields, so the encoding belongs with that hash, not here.

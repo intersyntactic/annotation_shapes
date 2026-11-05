@@ -182,6 +182,9 @@ final class SemanticAnchor extends _Sha256Hex {
 /// settled, a party id is printable ASCII with no spaces, such as a Slack user
 /// id or a roster key. That is narrow on purpose: allowing more later breaks
 /// no id already written, and allowing less would.
+///
+/// It holds an id, never a display name: a name may have spaces in it, and
+/// may change.
 final class PartyId {
   const PartyId._(this.value);
 
