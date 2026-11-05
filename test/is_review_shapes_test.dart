@@ -9,6 +9,17 @@ final class _Level extends Verdict {
   final int level;
 }
 
+/// Another shape's verdict, with the same fields.
+final class _Other extends Verdict {
+  const _Other(this.level);
+  final int level;
+}
+
+Target _target() =>
+    Target(exact: TurnId.parse(_hex)!, anchor: SemanticAnchor.parse(_hex)!);
+
+PartyId _peter() => PartyId.parse('U024BE7LH')!;
+
 void main() {
   group('TurnId and SemanticAnchor', () {
     test('parse reads a sha256 in lower-case hex', () {
@@ -83,6 +94,24 @@ void main() {
     final approval = Approve(target: target, by: by);
     expect(approval.target, target);
     expect(approval.by, by);
+  });
+
+  test('a comment holds its text and proposes nothing', () {
+    final comment = Comment(target: _target(), text: 'why 3?', by: _peter());
+    expect(comment.target, _target());
+    expect(comment.text, 'why 3?');
+    expect(comment.by, _peter());
+  });
+
+  test('a correction proposes a verdict of its own type', () {
+    final correction = Correction(
+      target: _target(),
+      proposed: const _Level(1),
+      by: _peter(),
+    );
+    expect(correction, isA<Correction<_Level>>());
+    expect(correction, isNot(isA<Correction<_Other>>()));
+    expect(correction.proposed.level, 1);
   });
 
   test('a module declares its own verdict by extending Verdict', () {

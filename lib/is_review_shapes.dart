@@ -6,6 +6,8 @@
 /// Slack reaction could never bind where Hart waits for an approval
 /// (https://github.com/enspyrco/intersyntactic/issues/1073).
 ///
+/// - [Comment]: a thought on a node, proposing no change to it.
+/// - [Correction]: a proposed new verdict for a node.
 /// - [Approve]: an approval of a node.
 /// - [Verdict]: what a node concludes. Each module declares its own verdicts
 ///   by extending it.
@@ -65,7 +67,7 @@ final class Identity {
 /// }
 /// ```
 ///
-/// A correction is generic over the verdict it proposes, bounded by this
+/// A [Correction] is generic over the verdict it proposes, bounded by this
 /// class. Classes match by name, so the analyzer refuses a correction that
 /// proposes one shape's verdict to another, even when their fields are the
 /// same. A record or an extension type can't extend a class, so neither can be
@@ -77,6 +79,49 @@ final class Identity {
 /// and every module declares its own verdicts.
 abstract base class Verdict {
   const Verdict();
+}
+
+/// A thought on the node at [target], by [by], proposing no change to it.
+final class Comment {
+  const Comment({required this.target, required this.text, required this.by});
+
+  /// What the comment is on.
+  final Target target;
+
+  /// What it says.
+  final String text;
+
+  /// Who wrote it.
+  final PartyId by;
+}
+
+/// A proposed new verdict, by [by], for the node at [target].
+///
+/// [V] is the verdict type of the shape being corrected. An acceptor that
+/// applies corrections to rungs accepts `Correction<RungVerdict>`, and the
+/// analyzer refuses a `Correction<SectionVerdict>` bound to it, even when the
+/// two verdicts have the same fields. Declare a verdict `final`: a verdict
+/// with subclasses would let a correction proposing a subclass bind where its
+/// parent is accepted.
+///
+/// It proposes; it changes nothing. The acceptor applying it checks [target]
+/// first (see [Target]), and the corrected node is never rewritten: the
+/// correction folds into the next pass.
+final class Correction<V extends Verdict> {
+  const Correction({
+    required this.target,
+    required this.proposed,
+    required this.by,
+  });
+
+  /// The node to be corrected.
+  final Target target;
+
+  /// The verdict proposed for it, of its own shape's verdict type.
+  final V proposed;
+
+  /// Who proposed it.
+  final PartyId by;
 }
 
 /// An approval, by [by], of the node at [target]: a correction, or a

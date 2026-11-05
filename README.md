@@ -32,6 +32,11 @@ final class Rung {
 
 ## What is here
 
+- `Comment`: a thought on a node, by a party, proposing no change to it.
+- `Correction<V extends Verdict>`: a proposed new verdict for a node, of that
+  node's own verdict type. An acceptor for `Correction<RungVerdict>` refuses
+  a `Correction<SectionVerdict>` at composition, even when the two verdicts
+  have the same fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by a party. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
 - `Verdict`: what a node concludes, the fields a correction may change. Each
@@ -58,9 +63,6 @@ the check.
 
 ## Coming next
 
-- `Comment`: a thought on a node, proposing no change.
-- `Correction<V extends Verdict>`: a proposed new verdict for a node, of that
-  node's own verdict type.
 - `Withdraw<T>`: takes back a `T`. Readers apply one rule everywhere: an `X`
   counts while no later `Withdraw<X>` from its author targets it.
 
