@@ -114,6 +114,17 @@ void main() {
     expect(correction.proposed.level, 1);
   });
 
+  test('a withdrawal says what it takes back, at run time too', () {
+    final withdrawal = Withdraw<Approve>(
+      target: TurnId.parse(_hex)!,
+      by: _peter(),
+    );
+    expect(withdrawal, isA<Withdraw<Approve>>());
+    expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
+    expect(withdrawal.target, TurnId.parse(_hex));
+    expect(withdrawal.by, _peter());
+  });
+
   test('a module declares its own verdict by extending Verdict', () {
     const Verdict verdict = _Level(2);
     expect(verdict, isA<_Level>().having((v) => v.level, 'level', 2));

@@ -9,6 +9,7 @@
 /// - [Comment]: a thought on a node, proposing no change to it.
 /// - [Correction]: a proposed new verdict for a node.
 /// - [Approve]: an approval of a node.
+/// - [Withdraw]: takes back a node its author wrote.
 /// - [Verdict]: what a node concludes. Each module declares its own verdicts
 ///   by extending it.
 /// - [identity]: marks the fields a node is about.
@@ -137,6 +138,30 @@ final class Approve {
   final Target target;
 
   /// Who approved it.
+  final PartyId by;
+}
+
+/// Takes back a [T]: the node at [target], which [by] wrote.
+///
+/// A node is never changed once written, so taking one back is a new node.
+/// Readers apply one rule to every shape: an `X` counts while no later
+/// `Withdraw<X>` from its author targets it. A withdrawal by anyone else
+/// counts for nothing, so a reader checks that [by] wrote [target].
+///
+/// [T] says what is taken back, so an acceptor waiting on withdrawn approvals
+/// accepts `Withdraw<Approve>` and is never handed a withdrawn Slack reaction.
+/// No field holds a [T], so nothing here checks that [target] is one; the
+/// reader that fetches [target] does.
+///
+/// [target] is the exact node, not an anchor: what is taken back is the one
+/// node its author wrote, not whatever is at its anchor in a later pass.
+final class Withdraw<T extends Object> {
+  const Withdraw({required this.target, required this.by});
+
+  /// The node taken back.
+  final TurnId target;
+
+  /// Who took it back. It counts only if this is who wrote [target].
   final PartyId by;
 }
 

@@ -39,6 +39,11 @@ final class Rung {
   have the same fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by a party. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
+- `Withdraw<T>`: takes back a `T`, the exact node its author wrote. Readers
+  apply one rule everywhere: an `X` counts while no later `Withdraw<X>` from
+  its author targets it. `T` routes the withdrawal to the acceptors waiting
+  on it; no field holds a `T`, so the reader that fetches the target checks
+  it is one.
 - `Verdict`: what a node concludes, the fields a correction may change. Each
   module declares its own verdicts by extending it. It is `abstract base`:
   another library can extend it but not implement it, and a record or an
@@ -60,11 +65,6 @@ which returns null for a malformed one
 Code that holds one never asks whether it is well formed. They are classes, not
 extension types, because a `String` can be cast to an extension type and skip
 the check.
-
-## Coming next
-
-- `Withdraw<T>`: takes back a `T`. Readers apply one rule everywhere: an `X`
-  counts while no later `Withdraw<X>` from its author targets it.
 
 ## Still open
 
