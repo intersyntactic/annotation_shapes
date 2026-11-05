@@ -1,0 +1,14 @@
+name: is_review_shapes
+description: >-
+  The shapes a person reviews with, shared by every intersyntactic module: a
+  comment, a correction, an approval, a withdrawal, the verdict a correction
+  proposes, and the annotation that marks a shape's identity fields.
+version: 0.1.0
+repository: https://github.com/intersyntactic/review_shapes
+
+environment:
+  sdk: ^3.13.0
+
+dev_dependencies:
+  lints: ^6.1.0
+  test: ^1.33.0
