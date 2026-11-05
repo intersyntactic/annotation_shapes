@@ -16,6 +16,7 @@ const _pureSdk = {
 const _purePackages = {
   'checked_json',
   'is_tools_api',
+  'is_content_id',
   'is_shapes',
   'is_review_shapes',
 };
