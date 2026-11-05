@@ -4,14 +4,14 @@ import 'package:test/test.dart';
 
 const _hex = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855';
 
-/// A verdict as a module declares one.
-final class _Level extends Verdict {
+/// A value as a module declares one.
+final class _Level extends Value {
   const _Level(this.level);
   final int level;
 }
 
-/// Another shape's verdict, with the same fields.
-final class _Other extends Verdict {
+/// Another shape's value, with the same fields.
+final class _Other extends Value {
   const _Other(this.level);
   final int level;
 }
@@ -29,7 +29,7 @@ void main() {
     expect(comment.by, _peter());
   });
 
-  test('a correction proposes a verdict of its own type', () {
+  test('a correction proposes a value of its own type', () {
     final correction = Correction(
       target: _target(),
       proposed: const _Level(1),
@@ -53,10 +53,5 @@ void main() {
     );
     expect(withdrawal, isA<Withdraw<Approve>>());
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
-  });
-
-  test('a module declares its own verdict by extending Verdict', () {
-    const Verdict verdict = _Level(2);
-    expect(verdict, isA<_Level>().having((v) => v.level, 'level', 2));
   });
 }

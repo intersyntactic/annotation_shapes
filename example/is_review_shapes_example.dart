@@ -1,13 +1,13 @@
-// A module's own shapes, the way its shape file declares them: a verdict of
-// its own, and a shape whose identity is marked. Then a correction to one,
-// and an approval of the correction.
+// A module's own shapes, the way its shape file declares them: a value of
+// its own (Hart calls its rung's value a verdict), and a shape whose identity
+// is marked. Then a correction to one, and an approval of the correction.
 import 'package:is_review_shapes/is_review_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
 enum RungLevel { supported, overstated, unsupported }
 
 /// What a rung concludes: the fields a correction to it may change.
-final class RungVerdict extends Verdict {
+final class RungVerdict extends Value {
   const RungVerdict(this.level, this.rationale);
   final RungLevel level;
   final String rationale;

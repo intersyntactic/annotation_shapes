@@ -1,7 +1,7 @@
 name: is_review_shapes
 description: >-
   The shapes a person reviews with in intersyntactic: a comment, a
-  correction, an approval, and the verdict a correction proposes.
+  correction to a node's value, and an approval.
 version: 0.1.0
 repository: https://github.com/intersyntactic/review_shapes
 
@@ -14,7 +14,7 @@ dependencies:
   is_shapes:
     git:
       url: git@github.com:intersyntactic/shapes.git
-      ref: 948f98dedb82d803bee40d79fd5f9c8f78b37bca
+      ref: db66d4ddb5488f3a0b0ece4a09d3ce4874f81004
 
 dev_dependencies:
   lints: ^6.1.0

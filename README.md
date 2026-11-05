@@ -1,7 +1,7 @@
 # is_review_shapes
 
-The shapes a person reviews with in intersyntactic: a comment, a correction,
-an approval, and the verdict a correction proposes. A module needs them when a
+The shapes a person reviews with in intersyntactic: a comment, a correction
+to a node's value, and an approval. A module needs them when a
 person judges something in it, as Hart's corrections to a rung and Slack's
 consent by reaction do. A module that only declares shapes needs
 [`is_shapes`](https://github.com/intersyntactic/shapes), not this.
@@ -18,14 +18,14 @@ declared once, here, for every module that reviews
 import 'package:is_review_shapes/is_review_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
-/// What a rung concludes: the fields a correction to it may change.
-final class RungVerdict extends Verdict {
+/// A rung's value, which Hart calls its verdict: what a correction may change.
+final class RungVerdict extends Value {
   const RungVerdict(this.level, this.rationale);
   final RungLevel level;
   final String rationale;
 }
 
-/// A rung is about its failure mode; its verdict may change from pass to pass.
+/// A rung is about its failure mode; its value may change from pass to pass.
 final class Rung {
   const Rung({required this.failureMode, required this.verdict});
   @identity
@@ -39,20 +39,17 @@ final class Rung {
 ## What is here
 
 - `Comment`: a thought on a node, by a party, proposing no change to it.
-- `Correction<V extends Verdict>`: a proposed new verdict for a node, of that
-  node's own verdict type. An acceptor for `Correction<RungVerdict>` refuses
-  a `Correction<SectionVerdict>` at composition, even when the two verdicts
-  have the same fields. It proposes; the corrected node is never rewritten.
+- `Correction<V extends Value>`: a proposed new value for a node, of that
+  node's own value type. An acceptor for `Correction<RungVerdict>` refuses a
+  `Correction<SectionVerdict>` at composition, even when the two values have
+  the same fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by a party. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
-- `Verdict`: what a node concludes, the fields a correction may change. Each
-  module declares its own verdicts by extending it, and should declare them
-  `final`. It is `abstract base`: another library can extend it but not
-  implement it, and a record or an extension type can't be one. (Not
-  `sealed`, which would let only this library declare verdicts.)
 
-What they point at (`Target`), who wrote them (`PartyId`), and the
-`Withdraw<T>` that takes one back all come from `is_shapes`.
+What they point at (`Target`), who wrote them (`PartyId`), the `Value` a
+correction proposes, and the `Withdraw<T>` that takes one back all come from
+`is_shapes`. `Value` is there, not here, because it is `@identity`'s other
+half: every field a shape doesn't mark as identity is its value.
 
 ## The pure list
 
