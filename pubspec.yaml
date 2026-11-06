@@ -1,9 +1,9 @@
-name: is_review_shapes
+name: is_annotation_shapes
 description: >-
-  The shapes a person reviews with in intersyntactic: a comment, a
-  correction to a node's value, and an approval.
+  Annotation shapes for intersyntactic: a comment, a correction to a node's
+  value, and an approval, each written beside a node and never changing it.
 version: 0.1.0
-repository: https://github.com/intersyntactic/review_shapes
+repository: https://github.com/intersyntactic/annotation_shapes
 
 environment:
   sdk: ^3.13.0

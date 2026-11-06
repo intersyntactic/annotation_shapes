@@ -1,7 +1,7 @@
 // A module's own shapes, the way its shape file declares them: a value of
 // its own (Hart calls its rung's value a verdict), and a shape whose identity
 // is marked. Then a correction to one, and an approval of the correction.
-import 'package:is_review_shapes/is_review_shapes.dart';
+import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
 enum RungLevel { supported, overstated, unsupported }

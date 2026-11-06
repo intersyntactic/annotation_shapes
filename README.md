@@ -1,21 +1,23 @@
-# is_review_shapes
+# is_annotation_shapes
 
-The shapes a person reviews with in intersyntactic: a comment, a correction
-to a node's value, and an approval. A module needs them when a
-person judges something in it, as Hart's corrections to a rung and Slack's
-consent by reaction do. A module that only declares shapes needs
-[`is_shapes`](https://github.com/intersyntactic/shapes), not this.
+Annotation shapes for intersyntactic: a comment, a correction to a node's
+value, and an approval. An annotation is a node a party writes beside another
+node: it points at that node and never changes it, as in the
+[W3C Web Annotation model](https://www.w3.org/TR/annotation-model/). A module
+needs them when parties annotate its nodes, as Hart's corrections to a rung
+and Slack's consent by reaction do. A module that only declares shapes needs
+[`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
 ([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). Dart
 matches classes by name, so if Hart and Slack each declared an `Approve`, a
 Slack reaction could never bind where Hart waits for an approval. They are
-declared once, here, for every module that reviews
+declared once, here, for every module whose nodes are annotated
 ([#1073](https://github.com/enspyrco/intersyntactic/issues/1073)).
 
 ```dart
-import 'package:is_review_shapes/is_review_shapes.dart';
+import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
 /// A rung's value, which Hart calls its verdict: what a correction may change.
@@ -58,8 +60,8 @@ half: every field a shape doesn't mark as identity is its value.
 A shape file may import only what import admission's pure list allows
 ([#1046](https://github.com/enspyrco/intersyntactic/issues/1046)). This
 package imports only `is_shapes`, and both have to be added to that list.
-`test/pure_list_test.dart` holds it to the list, and it reads every branch of
-a conditional import, not only the first.
+`test/pure_list_test.dart` holds it to the list, reading every branch of every
+import and export from the parse tree.
 
 ## Depending on it
 
@@ -68,6 +70,6 @@ It isn't published yet. Until it is:
 ```yaml
 dependencies:
   is_shapes: ^0.1.0
-  is_review_shapes:
-    git: git@github.com:intersyntactic/review_shapes.git
+  is_annotation_shapes:
+    git: git@github.com:intersyntactic/annotation_shapes.git
 ```

@@ -20,7 +20,7 @@ const _purePackages = {
   'is_tools_api',
   'is_content_id',
   'is_shapes',
-  'is_review_shapes',
+  'is_annotation_shapes',
 };
 
 /// Every URI a source's directives name, in every branch, as written, read

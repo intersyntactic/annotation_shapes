@@ -1,11 +1,14 @@
-/// The shapes a person reviews with: a comment, a correction and an
-/// approval. A module needs them when a person judges something in it, as
-/// Hart's corrections to a rung and Slack's consent by reaction do.
+/// Annotation shapes: a comment, a correction and an approval. An annotation
+/// is a node a party writes beside another node: it points at that node and
+/// never changes it, as in the W3C Web Annotation model
+/// (https://www.w3.org/TR/annotation-model/). A module needs them when
+/// parties annotate its nodes, as Hart's corrections to a rung and Slack's
+/// consent by reaction do.
 ///
 /// Dart matches classes by name. A module that declared its own `Approve`
 /// would make a type no other module's `Approve` can be assigned to, so a
 /// Slack reaction could never bind where Hart waits for an approval. So they
-/// are declared once, here, for every module that reviews
+/// are declared once, here, for every module whose nodes are annotated
 /// (https://github.com/enspyrco/intersyntactic/issues/1073).
 ///
 /// - [Comment]: a thought on a node, proposing no change to it.

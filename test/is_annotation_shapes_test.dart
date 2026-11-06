@@ -1,4 +1,4 @@
-import 'package:is_review_shapes/is_review_shapes.dart';
+import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 import 'package:test/test.dart';
 
