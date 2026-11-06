@@ -27,17 +27,18 @@ const _purePackages = {
 /// from its parse tree: a conditional import keeps one [Configuration] per
 /// branch there, where the analyzer's element model holds only the branch it
 /// picked. The parser already knows comments, strings and metadata, so nothing
-/// here reads them again. The switch covers the sealed [UriBasedDirective]
+/// here reads them again. The switch covers the sealed [Directive]
 /// exhaustively, so a new kind of directive stops this compiling.
 Iterable<StringLiteral> directiveUris(String source) sync* {
   final unit = parseString(content: source, throwIfDiagnostics: false).unit;
-  for (final directive in unit.directives.whereType<UriBasedDirective>()) {
-    yield directive.uri;
+  for (final directive in unit.directives) {
     yield* switch (directive) {
-      NamespaceDirective(:final configurations) => [
+      NamespaceDirective(:final uri, :final configurations) => [
+        uri,
         for (final branch in configurations) branch.uri,
       ],
-      PartDirective() => const <StringLiteral>[],
+      PartDirective(:final uri) => [uri],
+      LibraryDirective() || PartOfDirective() => const <StringLiteral>[],
     };
   }
 }
