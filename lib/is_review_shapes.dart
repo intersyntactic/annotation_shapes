@@ -12,8 +12,10 @@
 /// - [Correction]: a proposed new value for a node.
 /// - [Approve]: an approval of a node.
 ///
-/// What they point at and who wrote them, the `Value` a correction proposes,
-/// and the `Withdraw<T>` that takes one back, come from `is_shapes`.
+/// Each can be taken back by its author: they are `Withdrawable`, and a
+/// `Withdraw` of one is final. What they point at and who wrote them, the
+/// `Value` a correction proposes, and the `Withdraw<T>` that takes one back,
+/// come from `is_shapes`.
 ///
 /// It imports only `is_shapes`, so a shape file may import it under import
 /// admission's pure list once both are on it
@@ -23,7 +25,7 @@ library;
 import 'package:is_shapes/is_shapes.dart';
 
 /// A thought on the node at [target], by [by], proposing no change to it.
-final class Comment {
+final class Comment implements Withdrawable {
   const Comment({required this.target, required this.text, required this.by});
 
   /// What the comment is on.
@@ -48,7 +50,7 @@ final class Comment {
 /// correction for a fresh approval if they differ in what it depends on. The
 /// corrected node is never rewritten: the correction folds into the next
 /// pass.
-final class Correction<V extends Value> {
+final class Correction<V extends Value> implements Withdrawable {
   const Correction({
     required this.target,
     required this.proposed,
@@ -71,7 +73,7 @@ final class Correction<V extends Value> {
 /// Whose approval counts is decided by readers, not by this type. An approval
 /// is never changed once written. It is taken back by a later
 /// `Withdraw<Approve>` from its author.
-final class Approve {
+final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
 
   /// What is approved.

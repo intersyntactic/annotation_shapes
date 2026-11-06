@@ -46,7 +46,9 @@ final class Rung {
 - `Approve`: an approval of a node, by a party. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
 
-What they point at (`Target`), who wrote them (`PartyId`), the `Value` a
+Each is `Withdrawable`: its author can take it back with a `Withdraw`, and a
+withdrawal is final. What they point at (`Target`), who wrote them
+(`PartyId`), the `Value` a
 correction proposes, and the `Withdraw<T>` that takes one back all come from
 `is_shapes`. `Value` is there, not here, because it is `@identity`'s other
 half: every field a shape doesn't mark as identity is its value.
