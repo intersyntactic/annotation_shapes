@@ -1,11 +1,11 @@
 # is_annotation_shapes
 
-Annotation shapes for intersyntactic: a comment, a correction to a node's
-value, and an approval. An annotation is a node an actor writes beside another
-node: it points at that node and never changes it, as in the
-[W3C Web Annotation model](https://www.w3.org/TR/annotation-model/). A module
-needs them when actors annotate its nodes, as Hart's corrections to a rung
-and Slack's consent by reaction do. A module that only declares shapes needs
+Annotation shapes for intersyntactic: a comment, a correction to a node's value,
+an approval and a deferral. An annotation is a node an actor writes beside
+another node: it points at that node and never changes it, as in the [W3C Web
+Annotation model](https://www.w3.org/TR/annotation-model/). A module needs them
+when actors annotate its nodes, as Hart's corrections to a rung and Slack's
+consent by reaction do. A module that only declares shapes needs
 [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
@@ -47,13 +47,20 @@ final class Rung {
   the same fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by an actor. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
+- `Defer`: a deferral of a node, by an actor who considered it and chose to
+  take no position yet, as a "Not yet" button on a Teams card does.
 
-Each is `Withdrawable`: its author can take it back with a `Withdraw`, and a
-withdrawal is final. What they point at (`Target`), who wrote them
-(`ActorId`), the `Value` a
-correction proposes, and the `Withdraw<T>` that takes one back all come from
-`is_shapes`. `Value` is there, not here, because it is `@identity`'s other
-half: every field a shape doesn't mark as identity is its value.
+An annotation is of one version of a node, the one at its target's exact id,
+and an actor has considered that version once they have written any
+annotation of it, withdrawn or not.
+
+A comment, a correction or an approval is `Withdrawable`: its author can take it
+back with a `Withdraw`, and a withdrawal is final. A deferral is not: what its
+author writes next takes its place. What they point at (`Target`), who wrote
+them (`ActorId`), the `Value` a correction proposes, and the `Withdraw<T>` that
+takes one back all come from `is_shapes`. `Value` is there, not here, because it
+is `@identity`'s other half: every field a shape doesn't mark as identity is its
+value.
 
 ## The pure list
 

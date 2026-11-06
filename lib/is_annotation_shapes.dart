@@ -1,6 +1,6 @@
-/// Annotation shapes: a comment, a correction and an approval. An annotation
-/// is a node an actor writes beside another node: it points at that node and
-/// never changes it, as in the W3C Web Annotation model
+/// Annotation shapes: a comment, a correction, an approval and a deferral. An
+/// annotation is a node an actor writes beside another node: it points at
+/// that node and never changes it, as in the W3C Web Annotation model
 /// (https://www.w3.org/TR/annotation-model/). A module needs them when
 /// actors annotate its nodes, as Hart's corrections to a rung and Slack's
 /// consent by reaction do.
@@ -14,11 +14,18 @@
 /// - [Comment]: a thought on a node, proposing no change to it.
 /// - [Correction]: a proposed new value for a node.
 /// - [Approve]: an approval of a node.
+/// - [Defer]: a node considered and given no position yet.
 ///
-/// Each can be taken back by its author: they are `Withdrawable`, and a
-/// `Withdraw` of one is final. What they point at and who wrote them, the
-/// `Value` a correction proposes, and the `Withdraw<T>` that takes one back,
-/// come from `is_shapes`.
+/// An annotation is of one version of a node, the one at its target's exact
+/// id; whether it holds for a later pass at the same anchor is the reader's
+/// to decide, as `Target` says. An actor has considered a version once they
+/// have written any annotation of it, withdrawn or not.
+///
+/// A comment, a correction or an approval can be taken back by its author:
+/// they are `Withdrawable`, and a `Withdraw` of one is final. A deferral is
+/// not: what its author writes next takes its place. What they point at and
+/// who wrote them, the `Value` a correction proposes, and the `Withdraw<T>`
+/// that takes one back, come from `is_shapes`.
 ///
 /// It imports only `is_shapes`, so a shape file may import it under import
 /// admission's pure list once both are on it
@@ -89,5 +96,24 @@ final class Approve implements Withdrawable {
   final Target target;
 
   /// Who approved it.
+  final ActorId by;
+}
+
+/// A deferral, by [by], of the node at [target]: they considered that version
+/// and chose to take no position on it yet, as an actor does by pressing "Not
+/// yet" on a Teams card.
+///
+/// It records a decision, so its author writes it by choosing to. It takes no
+/// position, so the module writing one also withdraws its author's standing
+/// approvals of the node. It is not `Withdrawable`, since there is no position
+/// to take back: what its author writes next, an approval or a comment, takes
+/// its place.
+final class Defer {
+  const Defer({required this.target, required this.by});
+
+  /// What is deferred.
+  final Target target;
+
+  /// Who deferred it.
   final ActorId by;
 }

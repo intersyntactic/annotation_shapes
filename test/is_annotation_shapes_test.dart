@@ -57,4 +57,11 @@ void main() {
     expect(withdrawal, isA<Withdraw<Approve>>());
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
   });
+
+  test('a deferral holds what is deferred and who deferred it', () {
+    final deferral = Defer(target: _target(), by: _peter());
+    expect(deferral.target, _target());
+    expect(deferral.by, _peter());
+    expect(deferral, isNot(isA<Withdrawable>()));
+  });
 }
