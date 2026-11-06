@@ -9,7 +9,7 @@ environment:
   sdk: ^3.13.0
 
 dependencies:
-  is_shapes: ^0.2.0
+  is_shapes: ^0.3.0
 
 dev_dependencies:
   analyzer: ^14.7.0

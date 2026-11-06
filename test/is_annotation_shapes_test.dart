@@ -19,7 +19,7 @@ final class _Other extends Value {
 Target _target() =>
     Target(exact: TurnId.parse(_hex)!, anchor: SemanticAnchor.parse(_hex)!);
 
-PartyId _peter() => PartyId.parse(
+ActorId _peter() => ActorId.parse(
   'teams:11111111-1111-1111-1111-111111111111/'
   '22222222-2222-2222-2222-222222222222',
 )!;

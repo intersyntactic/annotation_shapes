@@ -1,8 +1,8 @@
 /// Annotation shapes: a comment, a correction and an approval. An annotation
-/// is a node a party writes beside another node: it points at that node and
+/// is a node an actor writes beside another node: it points at that node and
 /// never changes it, as in the W3C Web Annotation model
 /// (https://www.w3.org/TR/annotation-model/). A module needs them when
-/// parties annotate its nodes, as Hart's corrections to a rung and Slack's
+/// actors annotate its nodes, as Hart's corrections to a rung and Slack's
 /// consent by reaction do.
 ///
 /// Dart matches classes by name. A module that declared its own `Approve`
@@ -38,7 +38,7 @@ final class Comment implements Withdrawable {
   final String text;
 
   /// Who wrote it.
-  final PartyId by;
+  final ActorId by;
 }
 
 /// A proposed new value, by [by], for the node at [target].
@@ -67,7 +67,7 @@ final class Correction<V extends Value> implements Withdrawable {
   final V proposed;
 
   /// Who proposed it.
-  final PartyId by;
+  final ActorId by;
 }
 
 /// An approval, by [by], of the node at [target]: a correction, or a
@@ -77,10 +77,10 @@ final class Correction<V extends Value> implements Withdrawable {
 /// is never changed once written. It is taken back by a later
 /// `Withdraw<Approve>` from its author.
 ///
-/// A party may hold several approvals of one node: a double-click on a Teams
+/// An actor may hold several approvals of one node: a double-click on a Teams
 /// card writes two. They share an anchor, since their fields are the same,
 /// but each is its own node, and a withdrawal takes back only the one whose
-/// id it names. The node stays approved by that party while any of theirs
+/// id it names. The node stays approved by that actor while any of theirs
 /// stands, so to take their approval back a module withdraws every one.
 final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
@@ -89,5 +89,5 @@ final class Approve implements Withdrawable {
   final Target target;
 
   /// Who approved it.
-  final PartyId by;
+  final ActorId by;
 }
