@@ -16,10 +16,12 @@
 /// - [Approve]: an approval of a node.
 /// - [Defer]: a node considered and given no position yet.
 ///
-/// An annotation is of one version of a node, the one at its target's exact
-/// id; whether it holds for a later pass at the same anchor is the reader's
-/// to decide, as `Target` says. An actor has considered a version once they
-/// have written any annotation of it, withdrawn or not.
+/// A version of a node is what it says: its shape and its fields, without the
+/// path its exact id also names. A new pass gives every node a new exact id,
+/// and a new version only where something changed. An annotation is of the
+/// version at its target's exact id, and holds for a later pass while the
+/// node now at its anchor says the same. An actor has considered a version
+/// once they have written any annotation of it, withdrawn or not.
 ///
 /// A comment, a correction or an approval can be taken back by its author:
 /// they are `Withdrawable`, and a `Withdraw` of one is final. A deferral is
@@ -82,13 +84,15 @@ final class Correction<V extends Value> implements Withdrawable {
 ///
 /// Whose approval counts is decided by readers, not by this type. An approval
 /// is never changed once written. It is taken back by a later
-/// `Withdraw<Approve>` from its author.
+/// `Withdraw<Approve>` from its author. It approves a version, so a pass that
+/// changes what the node says needs a fresh approval.
 ///
-/// An actor may hold several approvals of one node: a double-click on a Teams
-/// card writes two. They share an anchor, since their fields are the same,
-/// but each is its own node, and a withdrawal takes back only the one whose
-/// id it names. The node stays approved by that actor while any of theirs
-/// stands, so to take their approval back a module withdraws every one.
+/// An actor may hold several approvals of one version: a double-click on a
+/// Teams card writes two, and an approval of an earlier pass stands for a
+/// later one that says the same. Each is its own node, and a withdrawal takes
+/// back only the one whose id it names. The version stays approved by that
+/// actor while any of theirs stands, so to take their approval back a module
+/// withdraws every one.
 final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
 
@@ -105,9 +109,9 @@ final class Approve implements Withdrawable {
 ///
 /// It records a decision, so its author writes it by choosing to. It takes no
 /// position, so the module writing one also withdraws its author's standing
-/// approvals of the node. It is not `Withdrawable`, since there is no position
-/// to take back: what its author writes next, an approval or a comment, takes
-/// its place.
+/// approvals of that version. It is not `Withdrawable`, since there is no
+/// position to take back: what its author writes next, an approval or a
+/// comment, takes its place.
 final class Defer {
   const Defer({required this.target, required this.by});
 

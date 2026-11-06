@@ -50,8 +50,11 @@ final class Rung {
 - `Defer`: a deferral of a node, by an actor who considered it and chose to
   take no position yet, as a "Not yet" button on a Teams card does.
 
-An annotation is of one version of a node, the one at its target's exact id,
-and an actor has considered that version once they have written any
+A version of a node is what it says: its shape and its fields, without the path
+its exact id also names. A new pass gives every node a new exact id, and a new
+version only where something changed. An annotation is of the version at its
+target's exact id, and holds for a later pass while the node now at its anchor
+says the same. An actor has considered a version once they have written any
 annotation of it, withdrawn or not.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
