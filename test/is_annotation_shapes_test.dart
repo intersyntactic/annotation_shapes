@@ -58,10 +58,10 @@ void main() {
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
   });
 
-  test('a deferral holds what is deferred and who deferred it', () {
-    final deferral = Defer(target: _target(), by: _peter());
-    expect(deferral.target, _target());
-    expect(deferral.by, _peter());
-    expect(deferral, isNot(isA<Withdrawable>()));
+  test('a seen mark holds what was seen and who saw it', () {
+    final seen = Seen(target: _target(), by: _peter());
+    expect(seen.target, _target());
+    expect(seen.by, _peter());
+    expect(seen, isNot(isA<Withdrawable>()));
   });
 }

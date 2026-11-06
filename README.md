@@ -1,12 +1,12 @@
 # is_annotation_shapes
 
 Annotation shapes for intersyntactic: a comment, a correction to a node's value,
-an approval and a deferral. An annotation is a node an actor writes beside
-another node: it points at that node and never changes it, as in the [W3C Web
-Annotation model](https://www.w3.org/TR/annotation-model/). A module needs them
-when actors annotate its nodes, as Hart's corrections to a rung and Slack's
-consent by reaction do. A module that only declares shapes needs
-[`is_shapes`](https://github.com/intersyntactic/shapes) alone.
+an approval and a mark that a node was seen. An annotation is a node an actor
+writes beside another node: it points at that node and never changes it, as in
+the [W3C Web Annotation model](https://www.w3.org/TR/annotation-model/). A
+module needs them when actors annotate its nodes, as Hart's corrections to a
+rung and Slack's consent by reaction do. A module that only declares shapes
+needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
@@ -47,8 +47,9 @@ final class Rung {
   the same fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by an actor. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
-- `Defer`: a deferral of a node, by an actor who considered it and chose to
-  take no position yet, as a "Not yet" button on a Teams card does.
+- `Seen`: a mark, by an actor, that they have seen a node and considered that
+  version, as a "Not yet" button on a Teams card writes. A version they have
+  seen and not approved is one they looked at and held off on.
 
 A version of a node is what it says: its shape and its fields, without the path
 its exact id also names. A new pass gives every node a new exact id, and a new
@@ -58,12 +59,11 @@ says the same. Whatever an actor has written of a version, on any pass and
 withdrawn or not, shows they considered it.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
-back with a `Withdraw`, and a withdrawal is final. A deferral is not: what its
-author writes next takes its place. What they point at (`Target`), who wrote
-them (`ActorId`), the `Value` a correction proposes, and the `Withdraw<T>` that
-takes one back all come from `is_shapes`. `Value` is there, not here, because it
-is `@identity`'s other half: every field a shape doesn't mark as identity is its
-value.
+back with a `Withdraw`, and a withdrawal is final. A `Seen` is not: what has
+been seen stays seen. What they point at (`Target`), who wrote them (`ActorId`),
+the `Value` a correction proposes, and the `Withdraw<T>` that takes one back all
+come from `is_shapes`. `Value` is there, not here, because it is `@identity`'s
+other half: every field a shape doesn't mark as identity is its value.
 
 ## The pure list
 
