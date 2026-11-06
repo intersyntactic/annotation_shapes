@@ -76,6 +76,12 @@ final class Correction<V extends Value> implements Withdrawable {
 /// Whose approval counts is decided by readers, not by this type. An approval
 /// is never changed once written. It is taken back by a later
 /// `Withdraw<Approve>` from its author.
+///
+/// A party may hold several approvals of one node: a double-click on a Teams
+/// card writes two. They share an anchor, since their fields are the same,
+/// but each is its own node, and a withdrawal takes back only the one whose
+/// id it names. The node stays approved by that party while any of theirs
+/// stands, so to take their approval back a module withdraws every one.
 final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
 
