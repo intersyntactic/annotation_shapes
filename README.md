@@ -67,8 +67,7 @@ It isn't published yet. Until it is:
 
 ```yaml
 dependencies:
-  is_shapes:
-    git: git@github.com:intersyntactic/shapes.git
+  is_shapes: ^0.1.0
   is_review_shapes:
     git: git@github.com:intersyntactic/review_shapes.git
 ```
