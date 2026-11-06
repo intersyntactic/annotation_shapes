@@ -19,7 +19,10 @@ final class _Other extends Value {
 Target _target() =>
     Target(exact: TurnId.parse(_hex)!, anchor: SemanticAnchor.parse(_hex)!);
 
-PartyId _peter() => PartyId.parse('U024BE7LH')!;
+PartyId _peter() => PartyId.parse(
+  'teams:11111111-1111-1111-1111-111111111111/'
+  '22222222-2222-2222-2222-222222222222',
+)!;
 
 void main() {
   test('a comment holds its text and proposes nothing', () {
