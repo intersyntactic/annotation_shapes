@@ -48,8 +48,8 @@ final class Rung {
 - `Approve`: an approval of a node, by an actor. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
 - `Seen`: a mark, by an actor, that they have seen a node and considered that
-  version, as a "Not yet" button on a Teams card writes. A version they have
-  seen and not approved is one they looked at and held off on.
+  version. A version they have seen and not approved is one they looked at and
+  held off on.
 
 A version of a node is what it says: its shape and its fields, without the path
 its exact id also names. A new pass gives every node a new exact id, and a new

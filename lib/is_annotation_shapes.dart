@@ -87,12 +87,11 @@ final class Correction<V extends Value> implements Withdrawable {
 /// `Withdraw<Approve>` from its author. It approves a version, so a pass that
 /// changes what the node says needs a fresh approval.
 ///
-/// An actor may hold several approvals of one version: a double-click on a
-/// Teams card writes two, and an approval of an earlier pass stands for a
-/// later one that says the same. Each is its own node, and a withdrawal takes
-/// back only the one whose id it names. The version stays approved by that
-/// actor while any of theirs stands, so to take their approval back a module
-/// withdraws every one.
+/// An actor may hold several approvals of one version: approving twice writes
+/// two, and an approval of an earlier pass stands for a later one that says the
+/// same. Each is its own node, and a withdrawal takes back only the one whose
+/// id it names. The version stays approved by that actor while any of theirs
+/// stands, so to take their approval back a module withdraws every one.
 final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
 
@@ -107,10 +106,10 @@ final class Approve implements Withdrawable {
 /// that version, and the mark says nothing more. So a version an actor has
 /// seen and not approved is one they looked at and held off on.
 ///
-/// Its author writes it by choosing to, as an actor does by pressing "Not yet"
-/// on a Teams card, which also withdraws their standing approvals of that
-/// version. It is not `Withdrawable`: what has been seen stays seen, and what
-/// its author writes next, an approval or a comment, says more.
+/// Its author writes it by choosing to. An actor holding off on a version they
+/// approved writes a Seen and withdraws their standing approvals of it. It is
+/// not `Withdrawable`: what has been seen stays seen, and what its author
+/// writes next, an approval or a comment, says more.
 final class Seen {
   const Seen({required this.target, required this.by});
 
