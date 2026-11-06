@@ -14,7 +14,7 @@ dependencies:
   is_shapes:
     git:
       url: git@github.com:intersyntactic/shapes.git
-      ref: db66d4ddb5488f3a0b0ece4a09d3ce4874f81004
+      ref: a77606cd2ff58745566c111a4bb7734327e9fff2
 
 dev_dependencies:
   lints: ^6.1.0
