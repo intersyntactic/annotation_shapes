@@ -1,7 +1,7 @@
-/// Annotation shapes: a comment, a correction, an approval and a deferral. An
-/// annotation is a node an actor writes beside another node: it points at
-/// that node and never changes it, as in the W3C Web Annotation model
-/// (https://www.w3.org/TR/annotation-model/). A module needs them when
+/// Annotation shapes: a comment, a correction, an approval and a mark that a
+/// node was seen. An annotation is a node an actor writes beside another node:
+/// it points at that node and never changes it, as in the W3C Web Annotation
+/// model (https://www.w3.org/TR/annotation-model/). A module needs them when
 /// actors annotate its nodes, as Hart's corrections to a rung and Slack's
 /// consent by reaction do.
 ///
@@ -14,7 +14,7 @@
 /// - [Comment]: a thought on a node, proposing no change to it.
 /// - [Correction]: a proposed new value for a node.
 /// - [Approve]: an approval of a node.
-/// - [Defer]: a node considered and given no position yet.
+/// - [Seen]: a mark that an actor has seen a node.
 ///
 /// A version of a node is what it says: its shape and its fields, without the
 /// path its exact id also names. A new pass gives every node a new exact id,
@@ -24,10 +24,10 @@
 /// on any pass and withdrawn or not, shows they considered it.
 ///
 /// A comment, a correction or an approval can be taken back by its author:
-/// they are `Withdrawable`, and a `Withdraw` of one is final. A deferral is
-/// not: what its author writes next takes its place. What they point at and
-/// who wrote them, the `Value` a correction proposes, and the `Withdraw<T>`
-/// that takes one back, come from `is_shapes`.
+/// they are `Withdrawable`, and a `Withdraw` of one is final. A `Seen` is
+/// not: what has been seen stays seen. What they point at and who wrote them,
+/// the `Value` a correction proposes, and the `Withdraw<T>` that takes one
+/// back, come from `is_shapes`.
 ///
 /// It imports only `is_shapes`, so a shape file may import it under import
 /// admission's pure list once both are on it
@@ -87,12 +87,11 @@ final class Correction<V extends Value> implements Withdrawable {
 /// `Withdraw<Approve>` from its author. It approves a version, so a pass that
 /// changes what the node says needs a fresh approval.
 ///
-/// An actor may hold several approvals of one version: a double-click on a
-/// Teams card writes two, and an approval of an earlier pass stands for a
-/// later one that says the same. Each is its own node, and a withdrawal takes
-/// back only the one whose id it names. The version stays approved by that
-/// actor while any of theirs stands, so to take their approval back a module
-/// withdraws every one.
+/// An actor may hold several approvals of one version: approving twice writes
+/// two, and an approval of an earlier pass stands for a later one that says the
+/// same. Each is its own node, and a withdrawal takes back only the one whose
+/// id it names. The version stays approved by that actor while any of theirs
+/// stands, so to take their approval back a module withdraws every one.
 final class Approve implements Withdrawable {
   const Approve({required this.target, required this.by});
 
@@ -103,21 +102,20 @@ final class Approve implements Withdrawable {
   final ActorId by;
 }
 
-/// A deferral, by [by], of the node at [target]: they considered that version
-/// and chose to take no position on it yet, as an actor does by pressing "Not
-/// yet" on a Teams card.
+/// A mark, by [by], that they have seen the node at [target]: they considered
+/// that version, and the mark says nothing more. So a version an actor has
+/// seen and not approved is one they looked at and held off on.
 ///
-/// It records a decision, so its author writes it by choosing to. It takes no
-/// position, so the module writing one also withdraws its author's standing
-/// approvals of that version. It is not `Withdrawable`, since there is no
-/// position to take back: what its author writes next, an approval or a
-/// comment, takes its place.
-final class Defer {
-  const Defer({required this.target, required this.by});
+/// Its author writes it by choosing to. An actor holding off on a version they
+/// approved writes a Seen and withdraws their standing approvals of it. It is
+/// not `Withdrawable`: what has been seen stays seen, and what its author
+/// writes next, an approval or a comment, says more.
+final class Seen {
+  const Seen({required this.target, required this.by});
 
-  /// What is deferred.
+  /// What was seen.
   final Target target;
 
-  /// Who deferred it.
+  /// Who saw it.
   final ActorId by;
 }

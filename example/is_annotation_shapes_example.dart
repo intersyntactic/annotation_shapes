@@ -37,12 +37,8 @@ void main() {
   final correctionAnchor = SemanticAnchor.parse(
     'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c',
   );
-  // An actor id names the source that minted it: Peter is a Teams user,
-  // teams:<tenant id>/<AAD object id>.
-  final peter = ActorId.parse(
-    'teams:11111111-1111-1111-1111-111111111111/'
-    '22222222-2222-2222-2222-222222222222',
-  );
+  // An actor id names the source that minted it, then that source's own id.
+  final peter = ActorId.parse('example:peter');
   if (seen == null || anchor == null || peter == null) return;
   if (correctionId == null || correctionAnchor == null) return;
 

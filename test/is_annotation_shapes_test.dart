@@ -19,10 +19,7 @@ final class _Other extends Value {
 Target _target() =>
     Target(exact: TurnId.parse(_hex)!, anchor: SemanticAnchor.parse(_hex)!);
 
-ActorId _peter() => ActorId.parse(
-  'teams:11111111-1111-1111-1111-111111111111/'
-  '22222222-2222-2222-2222-222222222222',
-)!;
+ActorId _peter() => ActorId.parse('example:peter')!;
 
 void main() {
   test('a comment holds its text and proposes nothing', () {
@@ -58,10 +55,10 @@ void main() {
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
   });
 
-  test('a deferral holds what is deferred and who deferred it', () {
-    final deferral = Defer(target: _target(), by: _peter());
-    expect(deferral.target, _target());
-    expect(deferral.by, _peter());
-    expect(deferral, isNot(isA<Withdrawable>()));
+  test('a seen mark holds what was seen and who saw it', () {
+    final seen = Seen(target: _target(), by: _peter());
+    expect(seen.target, _target());
+    expect(seen.by, _peter());
+    expect(seen, isNot(isA<Withdrawable>()));
   });
 }
