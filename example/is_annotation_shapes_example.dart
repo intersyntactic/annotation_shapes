@@ -1,30 +1,30 @@
 // A module's own shapes, the way its shape file declares them: a value of
-// its own (Hart calls its rung's value a verdict), and a shape whose identity
-// is marked. Then a correction to one, and an approval of the correction.
+// its own, and a shape whose identity is marked. Then a correction to one,
+// and an approval of the correction.
 import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
-enum RungLevel { supported, overstated, unsupported }
+enum Sky { clear, cloudy, rain }
 
-/// What a rung concludes: the fields a correction to it may change.
-final class RungVerdict extends Value {
-  const RungVerdict(this.level, this.rationale);
-  final RungLevel level;
-  final String rationale;
+/// What a forecast says: the fields a correction to it may change.
+final class Outlook extends Value {
+  const Outlook(this.sky, this.reason);
+  final Sky sky;
+  final String reason;
 }
 
-/// A rung: what it is about is its failure mode, and its verdict may change
-/// from one pass to the next without the rung becoming a different rung.
-final class Rung {
-  const Rung({required this.failureMode, required this.verdict});
+/// A forecast: what it is about is its day, and its outlook may change from
+/// one pass to the next without the forecast becoming a different forecast.
+final class Forecast {
+  const Forecast({required this.day, required this.outlook});
   @identity
-  final String failureMode;
-  final RungVerdict verdict;
+  final String day;
+  final Outlook outlook;
 }
 
 void main() {
   // Ids are read back from text where a node arrives; null if malformed.
-  final seen = TurnId.parse(
+  final forecastId = TurnId.parse(
     'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
   );
   final anchor = SemanticAnchor.parse(
@@ -38,19 +38,19 @@ void main() {
     'b5bb9d8014a0f9b1d61e21e796d78dccdf1352f23cd32812f4850b878ae4944c',
   );
   // An actor id names the source that minted it, then that source's own id.
-  final peter = ActorId.parse('example:peter');
-  if (seen == null || anchor == null || peter == null) return;
+  final sam = ActorId.parse('example:sam');
+  if (forecastId == null || anchor == null || sam == null) return;
   if (correctionId == null || correctionAnchor == null) return;
 
   final correction = Correction(
-    target: Target(exact: seen, anchor: anchor),
-    proposed: const RungVerdict(RungLevel.overstated, 'one source, not two'),
-    by: peter,
+    target: Target(exact: forecastId, anchor: anchor),
+    proposed: const Outlook(Sky.rain, 'the front arrives a day early'),
+    by: sam,
   );
   final approval = Approve(
     target: Target(exact: correctionId, anchor: correctionAnchor),
-    by: peter,
+    by: sam,
   );
-  print('${correction.by} proposed ${correction.proposed.level}');
+  print('${correction.by} proposed ${correction.proposed.sky}');
   print('${approval.by} approved ${approval.target.exact}');
 }

@@ -4,15 +4,14 @@ Annotation shapes for intersyntactic: a comment, a correction to a node's value,
 an approval and a mark that a node was seen. An annotation is a node an actor
 writes beside another node: it points at that node and never changes it, as in
 the [W3C Web Annotation model](https://www.w3.org/TR/annotation-model/). A
-module needs them when actors annotate its nodes, as Hart's corrections to a
-rung and Slack's consent by reaction do. A module that only declares shapes
-needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
+module needs them when actors annotate its nodes. A module that only declares
+shapes needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
 ([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). Dart
-matches classes by name, so if Hart and Slack each declared an `Approve`, a
-Slack reaction could never bind where Hart waits for an approval. They are
+matches classes by name, so if two modules each declared an `Approve`, one
+module's approval could never bind where the other waits for one. They are
 declared once, here, for every module whose nodes are annotated
 ([#1073](https://github.com/enspyrco/intersyntactic/issues/1073)).
 
@@ -20,31 +19,31 @@ declared once, here, for every module whose nodes are annotated
 import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
-/// A rung's value, which Hart calls its verdict: what a correction may change.
-final class RungVerdict extends Value {
-  const RungVerdict(this.level, this.rationale);
-  final RungLevel level;
-  final String rationale;
+/// A forecast's value: what a correction may change.
+final class Outlook extends Value {
+  const Outlook(this.sky, this.reason);
+  final Sky sky;
+  final String reason;
 }
 
-/// A rung is about its failure mode; its value may change from pass to pass.
-final class Rung {
-  const Rung({required this.failureMode, required this.verdict});
+/// A forecast is about its day; its outlook may change from pass to pass.
+final class Forecast {
+  const Forecast({required this.day, required this.outlook});
   @identity
-  final String failureMode;
-  final RungVerdict verdict;
+  final String day;
+  final Outlook outlook;
 }
 
-// An acceptor that applies corrections to rungs takes Correction<RungVerdict>.
+// An acceptor that applies corrections to forecasts takes Correction<Outlook>.
 ```
 
 ## What is here
 
 - `Comment`: a thought on a node, by an actor, proposing no change to it.
 - `Correction<V extends Value>`: a proposed new value for a node, of that
-  node's own value type. An acceptor for `Correction<RungVerdict>` refuses a
-  `Correction<SectionVerdict>` at composition, even when the two values have
-  the same fields. It proposes; the corrected node is never rewritten.
+  node's own value type. An acceptor for `Correction<Outlook>` refuses a
+  correction to any other value type at composition, even one with the same
+  fields. It proposes; the corrected node is never rewritten.
 - `Approve`: an approval of a node, by an actor. It is never changed once
   written; it is taken back by a later `Withdraw<Approve>` from its author.
 - `Seen`: a mark, by an actor, that they have seen a node and considered that

@@ -19,21 +19,21 @@ final class _Other extends Value {
 Target _target() =>
     Target(exact: TurnId.parse(_hex)!, anchor: SemanticAnchor.parse(_hex)!);
 
-ActorId _peter() => ActorId.parse('example:peter')!;
+ActorId _sam() => ActorId.parse('example:sam')!;
 
 void main() {
   test('a comment holds its text and proposes nothing', () {
-    final comment = Comment(target: _target(), text: 'why 3?', by: _peter());
+    final comment = Comment(target: _target(), text: 'why 3?', by: _sam());
     expect(comment.target, _target());
     expect(comment.text, 'why 3?');
-    expect(comment.by, _peter());
+    expect(comment.by, _sam());
   });
 
   test('a correction proposes a value of its own type', () {
     final correction = Correction(
       target: _target(),
       proposed: const _Level(1),
-      by: _peter(),
+      by: _sam(),
     );
     expect(correction, isA<Correction<_Level>>());
     expect(correction, isNot(isA<Correction<_Other>>()));
@@ -41,24 +41,24 @@ void main() {
   });
 
   test('an approval holds what is approved and who approved it', () {
-    final approval = Approve(target: _target(), by: _peter());
+    final approval = Approve(target: _target(), by: _sam());
     expect(approval.target, _target());
-    expect(approval.by, _peter());
+    expect(approval.by, _sam());
   });
 
   test('an approval is taken back by a withdrawal of an approval', () {
     final withdrawal = Withdraw<Approve>(
       target: TurnId.parse(_hex)!,
-      by: _peter(),
+      by: _sam(),
     );
     expect(withdrawal, isA<Withdraw<Approve>>());
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
   });
 
   test('a seen mark holds what was seen and who saw it', () {
-    final seen = Seen(target: _target(), by: _peter());
+    final seen = Seen(target: _target(), by: _sam());
     expect(seen.target, _target());
-    expect(seen.by, _peter());
+    expect(seen.by, _sam());
     expect(seen, isNot(isA<Withdrawable>()));
   });
 }

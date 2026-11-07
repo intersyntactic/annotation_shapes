@@ -2,12 +2,11 @@
 /// node was seen. An annotation is a node an actor writes beside another node:
 /// it points at that node and never changes it, as in the W3C Web Annotation
 /// model (https://www.w3.org/TR/annotation-model/). A module needs them when
-/// actors annotate its nodes, as Hart's corrections to a rung and Slack's
-/// consent by reaction do.
+/// actors annotate its nodes.
 ///
 /// Dart matches classes by name. A module that declared its own `Approve`
-/// would make a type no other module's `Approve` can be assigned to, so a
-/// Slack reaction could never bind where Hart waits for an approval. So they
+/// would make a type no other module's `Approve` can be assigned to, so one
+/// module's approval could never bind where another waits for one. So they
 /// are declared once, here, for every module whose nodes are annotated
 /// (https://github.com/enspyrco/intersyntactic/issues/1073).
 ///
@@ -53,9 +52,9 @@ final class Comment implements Withdrawable {
 /// A proposed new value, by [by], for the node at [target].
 ///
 /// [V] is the value type of the shape being corrected. An acceptor that
-/// applies corrections to rungs accepts `Correction<RungVerdict>`, and the
-/// analyzer refuses a `Correction<SectionVerdict>` bound to it, even when the
-/// two values have the same fields.
+/// applies corrections to forecasts accepts `Correction<Outlook>`, and the
+/// analyzer refuses a correction to any other value type bound to it, even
+/// one with the same fields.
 ///
 /// It proposes; it changes nothing. The acceptor applying it fetches the node
 /// at the target's exact id and the node now at its anchor, and holds the
