@@ -4,12 +4,12 @@
 import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 
-enum Sky { clear, cloudy, rain }
+enum Weather { clear, cloudy, rain }
 
 /// What a forecast says: the fields a correction to it may change.
 final class Outlook extends Value {
-  const Outlook(this.sky, this.reason);
-  final Sky sky;
+  const Outlook(this.weather, this.reason);
+  final Weather weather;
   final String reason;
 }
 
@@ -44,13 +44,13 @@ void main() {
 
   final correction = Correction(
     target: Target(exact: forecastId, anchor: anchor),
-    proposed: const Outlook(Sky.rain, 'the front arrives a day early'),
+    proposed: const Outlook(Weather.rain, 'the front arrives a day early'),
     by: sam,
   );
   final approval = Approve(
     target: Target(exact: correctionId, anchor: correctionAnchor),
     by: sam,
   );
-  print('${correction.by} proposed ${correction.proposed.sky}');
+  print('${correction.by} proposed ${correction.proposed.weather}');
   print('${approval.by} approved ${approval.target.exact}');
 }

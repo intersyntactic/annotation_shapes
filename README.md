@@ -21,8 +21,8 @@ import 'package:is_shapes/is_shapes.dart';
 
 /// A forecast's value: what a correction may change.
 final class Outlook extends Value {
-  const Outlook(this.sky, this.reason);
-  final Sky sky;
+  const Outlook(this.weather, this.reason);
+  final Weather weather;
   final String reason;
 }
 
