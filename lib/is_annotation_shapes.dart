@@ -4,7 +4,8 @@
 /// model (https://www.w3.org/TR/annotation-model/). A module needs them when
 /// actors annotate its nodes.
 ///
-/// Dart matches classes by name. A module that declared its own `Approve`
+/// A Dart class is its declaration: two classes with one name, declared in
+/// two libraries, are two types. A module that declared its own `Approve`
 /// would make a type no other module's `Approve` can be assigned to, so one
 /// module's approval could never bind where another waits for one. So they
 /// are declared once, here, for every module whose nodes are annotated

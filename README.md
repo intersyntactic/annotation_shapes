@@ -9,10 +9,11 @@ shapes needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
-([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). Dart
-matches classes by name, so if two modules each declared an `Approve`, one
-module's approval could never bind where the other waits for one. They are
-declared once, here, for every module whose nodes are annotated
+([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). A
+Dart class is its declaration, so if two modules each declared an `Approve`,
+they would hold two types, and one module's approval could never bind where
+the other waits for one. They are declared once, here, for every module whose
+nodes are annotated
 ([#1073](https://github.com/enspyrco/intersyntactic/issues/1073)).
 
 ```dart
