@@ -75,11 +75,11 @@ import and export from the parse tree.
 
 ## Depending on it
 
-It isn't published yet. Until it is:
+A module that annotates also names `Target` and `ActorId`, so it depends on
+`is_shapes` too:
 
 ```yaml
 dependencies:
+  is_annotation_shapes: ^0.1.0
   is_shapes: ^0.3.0
-  is_annotation_shapes:
-    git: git@github.com:intersyntactic/annotation_shapes.git
 ```
