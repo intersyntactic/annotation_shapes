@@ -51,12 +51,12 @@ final class Forecast {
   version. A version they have seen and not approved is one they looked at and
   held off on.
 
-A version of a node is what it says: its shape and its fields, without the path
-its exact id also names. A new pass gives every node a new exact id, and a new
-version only where something changed. An annotation is of the version at its
-target's exact id, and holds for a later pass while the node now at its anchor
-says the same. Whatever an actor has written of a version, on any pass and
-withdrawn or not, shows they considered it.
+A version of a node is what it says: its shape and its fields, without the
+whole history its exact id also names. A new pass gives every node a new exact
+id, and a new version only where something changed. An annotation is of the
+version at its target's exact id, and holds for a later pass while the node now
+at its anchor says the same. Whatever an actor has written of a version, on any
+pass and withdrawn or not, shows they considered it.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
 back with a `Withdraw`, and a withdrawal is final. A `Seen` is not: what has
