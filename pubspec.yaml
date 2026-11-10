@@ -3,7 +3,7 @@ description: >-
   Annotation shapes for intersyntactic: a comment, a correction to a node's
   value, an approval and a mark that a node was seen, each written beside a
   node and never changing it.
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/intersyntactic/annotation_shapes
 
 environment:
