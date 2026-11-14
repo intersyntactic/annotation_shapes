@@ -41,17 +41,17 @@ void main() {
   });
 
   test('an approval holds what is approved and who approved it', () {
-    final approval = Approve(target: _target(), by: _sam());
+    final approval = Approval(target: _target(), by: _sam());
     expect(approval.target, _target());
     expect(approval.by, _sam());
   });
 
   test('an approval is taken back by a withdrawal of an approval', () {
-    final withdrawal = Withdraw<Approve>(
+    final withdrawal = Withdraw<Approval>(
       target: TurnId.parse(_hex)!,
       by: _sam(),
     );
-    expect(withdrawal, isA<Withdraw<Approve>>());
+    expect(withdrawal, isA<Withdraw<Approval>>());
     expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
   });
 

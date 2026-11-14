@@ -10,7 +10,7 @@ shapes needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
 ([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). A
-Dart class is its declaration, so if two modules each declared an `Approve`,
+Dart class is its declaration, so if two modules each declared an `Approval`,
 they would hold two types, and one module's approval could never bind where
 the other waits for one. They are declared once, here, for every module whose
 nodes are annotated
@@ -45,8 +45,8 @@ final class Forecast {
   node's own value type. An acceptor for `Correction<Outlook>` refuses a
   correction to any other value type at composition, even one with the same
   fields. It proposes; the corrected node is never rewritten.
-- `Approve`: an approval of a node, by an actor. It is never changed once
-  written; it is taken back by a later `Withdraw<Approve>` from its author.
+- `Approval`: an approval of a node, by an actor. It is never changed once
+  written; it is taken back by a later `Withdraw<Approval>` from its author.
 - `Seen`: a mark, by an actor, that they have seen a node and considered that
   version. A version they have seen and not approved is one they looked at and
   held off on.

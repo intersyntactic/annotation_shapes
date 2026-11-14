@@ -5,15 +5,15 @@
 /// actors annotate its nodes.
 ///
 /// A Dart class is its declaration: two classes with one name, declared in
-/// two libraries, are two types. A module that declared its own `Approve`
-/// would make a type no other module's `Approve` can be assigned to, so one
+/// two libraries, are two types. A module that declared its own `Approval`
+/// would make a type no other module's `Approval` can be assigned to, so one
 /// module's approval could never bind where another waits for one. So they
 /// are declared once, here, for every module whose nodes are annotated
 /// (https://github.com/enspyrco/intersyntactic/issues/1073).
 ///
 /// - [Comment]: a thought on a node, proposing no change to it.
 /// - [Correction]: a proposed new value for a node.
-/// - [Approve]: an approval of a node.
+/// - [Approval]: an approval of a node.
 /// - [Seen]: a mark that an actor has seen a node.
 ///
 /// A version of a node is what it says: its shape and its fields, without the
@@ -84,7 +84,7 @@ final class Correction<V extends Value> implements Withdrawable {
 ///
 /// Whose approval counts is decided by readers, not by this type. An approval
 /// is never changed once written. It is taken back by a later
-/// `Withdraw<Approve>` from its author. It approves a version, so a pass that
+/// `Withdraw<Approval>` from its author. It approves a version, so a pass that
 /// changes what the node says needs a fresh approval.
 ///
 /// An actor may hold several approvals of one version: approving twice writes
@@ -92,8 +92,8 @@ final class Correction<V extends Value> implements Withdrawable {
 /// same. Each is its own node, and a withdrawal takes back only the one whose
 /// id it names. The version stays approved by that actor while any of theirs
 /// stands, so to take their approval back a module withdraws every one.
-final class Approve implements Withdrawable {
-  const Approve({required this.target, required this.by});
+final class Approval implements Withdrawable {
+  const Approval({required this.target, required this.by});
 
   /// What is approved.
   final Target target;

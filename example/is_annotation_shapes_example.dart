@@ -47,7 +47,7 @@ void main() {
     proposed: const Outlook(Weather.rain, 'the front arrives a day early'),
     by: sam,
   );
-  final approval = Approve(
+  final approval = Approval(
     target: Target(exact: correctionId, anchor: correctionAnchor),
     by: sam,
   );
