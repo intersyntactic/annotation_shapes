@@ -47,12 +47,12 @@ void main() {
   });
 
   test('an approval is taken back by a withdrawal of an approval', () {
-    final withdrawal = Withdraw<Approval>(
+    final withdrawal = Withdrawal<Approval>(
       target: TurnId.parse(_hex)!,
       by: _sam(),
     );
-    expect(withdrawal, isA<Withdraw<Approval>>());
-    expect(withdrawal, isNot(isA<Withdraw<Comment>>()));
+    expect(withdrawal, isA<Withdrawal<Approval>>());
+    expect(withdrawal, isNot(isA<Withdrawal<Comment>>()));
   });
 
   test('a seen mark holds what was seen and who saw it', () {

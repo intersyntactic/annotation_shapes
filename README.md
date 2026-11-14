@@ -46,7 +46,7 @@ final class Forecast {
   correction to any other value type at composition, even one with the same
   fields. It proposes; the corrected node is never rewritten.
 - `Approval`: an approval of a node, by an actor. It is never changed once
-  written; it is taken back by a later `Withdraw<Approval>` from its author.
+  written; it is taken back by a later `Withdrawal<Approval>` from its author.
 - `Seen`: a mark, by an actor, that they have seen a node and considered that
   version. A version they have seen and not approved is one they looked at and
   held off on.
@@ -59,11 +59,12 @@ at its anchor says the same. Whatever an actor has written of a version, on any
 pass and withdrawn or not, shows they considered it.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
-back with a `Withdraw`, and a withdrawal is final. A `Seen` is not: what has
+back with a `Withdrawal`, and a withdrawal is final. A `Seen` is not: what has
 been seen stays seen. What they point at (`Target`), who wrote them (`ActorId`),
-the `Value` a correction proposes, and the `Withdraw<T>` that takes one back all
-come from `is_shapes`. `Value` is there, not here, because it is `@identity`'s
-other half: every field a shape doesn't mark as identity is its value.
+the `Value` a correction proposes, and the `Withdrawal<T>` that takes one back
+all come from `is_shapes`. `Value` is there, not here, because it is
+`@identity`'s other half: every field a shape doesn't mark as identity is its
+value.
 
 ## The pure list
 
@@ -80,6 +81,6 @@ A module that annotates also names `Target` and `ActorId`, so it depends on
 
 ```yaml
 dependencies:
-  is_annotation_shapes: ^0.1.0
-  is_shapes: ^0.3.0
+  is_annotation_shapes: ^0.2.0
+  is_shapes: ^0.4.0
 ```

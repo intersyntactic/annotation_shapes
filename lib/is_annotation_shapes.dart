@@ -24,9 +24,9 @@
 /// version, on any pass and withdrawn or not, shows they considered it.
 ///
 /// A comment, a correction or an approval can be taken back by its author:
-/// they are `Withdrawable`, and a `Withdraw` of one is final. A `Seen` is
+/// they are `Withdrawable`, and a `Withdrawal` of one is final. A `Seen` is
 /// not: what has been seen stays seen. What they point at and who wrote them,
-/// the `Value` a correction proposes, and the `Withdraw<T>` that takes one
+/// the `Value` a correction proposes, and the `Withdrawal<T>` that takes one
 /// back, come from `is_shapes`.
 ///
 /// It imports only `is_shapes`, so a shape file may import it under import
@@ -84,8 +84,8 @@ final class Correction<V extends Value> implements Withdrawable {
 ///
 /// Whose approval counts is decided by readers, not by this type. An approval
 /// is never changed once written. It is taken back by a later
-/// `Withdraw<Approval>` from its author. It approves a version, so a pass that
-/// changes what the node says needs a fresh approval.
+/// `Withdrawal<Approval>` from its author. It approves a version, so a pass
+/// that changes what the node says needs a fresh approval.
 ///
 /// An actor may hold several approvals of one version: approving twice writes
 /// two, and an approval of an earlier pass stands for a later one that says the
