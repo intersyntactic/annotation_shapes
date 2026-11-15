@@ -61,4 +61,42 @@ void main() {
     expect(seen.by, _sam());
     expect(seen, isNot(isA<Withdrawable>()));
   });
+
+  test(
+    'a response becomes the annotations it says, once its node is known',
+    () {
+      // The shape shown is known here, so its value type is too.
+      Object annotate(Response response) => switch (response) {
+        Approved() => Approval(target: _target(), by: _sam()),
+        HeldOff() => Seen(target: _target(), by: _sam()),
+        Proposed(:final inputs) => switch (int.tryParse(
+          inputs['level'] ?? '',
+        )) {
+          final level? => Correction(
+            target: _target(),
+            proposed: _Level(level),
+            by: _sam(),
+          ),
+          null => 'refused',
+        },
+      };
+      expect(annotate(const Approved()), isA<Approval>());
+      expect(annotate(const HeldOff()), isA<Seen>());
+      expect(
+        annotate(Proposed({'level': '1'})),
+        isA<Correction<_Level>>().having((c) => c.proposed.level, 'level', 1),
+      );
+      expect(annotate(Proposed({'level': 'high'})), 'refused');
+      expect(annotate(Proposed({})), 'refused');
+      expect(const Approved(), isNot(isA<Withdrawable>()));
+    },
+  );
+
+  test('a proposal holds its inputs as they were sent', () {
+    final typed = {'level': '1'};
+    final proposed = Proposed(typed);
+    typed['level'] = '2';
+    expect(proposed.inputs, {'level': '1'});
+    expect(() => proposed.inputs['level'] = '3', throwsUnsupportedError);
+  });
 }

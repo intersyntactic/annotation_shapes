@@ -15,6 +15,8 @@
 /// - [Correction]: a proposed new value for a node.
 /// - [Approval]: an approval of a node.
 /// - [Seen]: a mark that an actor has seen a node.
+/// - [Response]: what a person said back to something shown to them, before
+///   anyone knows which node it was: [Approved], [HeldOff] or [Proposed].
 ///
 /// A version of a node is what it says: its shape and its fields, without the
 /// whole history its exact id also names. A new pass gives every node a new
@@ -118,4 +120,53 @@ final class Seen {
 
   /// Who saw it.
   final ActorId by;
+}
+
+/// What a person said back to something shown to them, before anyone knows
+/// which node it was: a card press in Teams, a button in Slack.
+///
+/// It has no target and no author. The module that reads it knows only which
+/// message was pressed, so whatever carries the response also carries that
+/// message and who pressed it. Whoever knows which node the message showed
+/// builds the annotations:
+///
+/// - [Approved]: an [Approval] of that node.
+/// - [HeldOff]: a [Seen] of it, and a `Withdrawal<Approval>` of each approval
+///   of theirs that stands.
+/// - [Proposed]: a [Correction] of it, if [Proposed.inputs] parse as a value
+///   of its shape's value type. If they don't, it is refused.
+///
+/// It is a thing that happened, so like a [Seen] it is not `Withdrawable`:
+/// a press stays pressed, and what is taken back is the annotation built from
+/// it. The cases are past tense for the same reason, and are named for what
+/// the person said, so any press, button or reply that says it reads the same.
+sealed class Response {
+  const Response();
+}
+
+/// They approved what they were shown.
+final class Approved extends Response {
+  const Approved();
+}
+
+/// They looked at what they were shown and held off on it.
+final class HeldOff extends Response {
+  const HeldOff();
+}
+
+/// They proposed a new value for what they were shown, in the [inputs] their
+/// client sent with it.
+///
+/// It carries text, not a [Value]: which value type a correction needs
+/// depends on the shape shown, and that is known only once the node is.
+/// Whoever learns the node reads the ids its shape's fields name, parses them
+/// into its value type `V` and builds a `Correction<V>`, or refuses them if
+/// they don't fit. Other ids may be there too: a client can send what the
+/// person typed and the message's own data as one set. They come from
+/// the person's client and are unchecked until then.
+final class Proposed extends Response {
+  Proposed(Map<String, String> inputs) : inputs = Map.unmodifiable(inputs);
+
+  /// The text fields their client sent with the response, by id.
+  final Map<String, String> inputs;
 }

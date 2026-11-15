@@ -50,6 +50,15 @@ final class Forecast {
 - `Seen`: a mark, by an actor, that they have seen a node and considered that
   version. A version they have seen and not approved is one they looked at and
   held off on.
+- `Response`: what a person said back to something shown to them, before
+  anyone knows which node it was, such as a Teams card press or a Slack
+  button: `Approved`, `HeldOff`, or `Proposed` with the text fields their
+  client sent, by id. It has no target and no author, and a proposal carries
+  text rather than a `Value`, because which value type it needs depends on the
+  node. Whoever learns which node the message showed builds the annotations
+  from it: an `Approval`; a `Seen` and a `Withdrawal<Approval>` of each of
+  their approvals that stands; or a `Correction<V>`, if the fields its shape
+  names parse as that node's value type `V`, and otherwise nothing.
 
 A version of a node is what it says: its shape and its fields, without the
 whole history its exact id also names. A new pass gives every node a new exact
@@ -81,6 +90,6 @@ A module that annotates also names `Target` and `ActorId`, so it depends on
 
 ```yaml
 dependencies:
-  is_annotation_shapes: ^0.2.0
+  is_annotation_shapes: ^0.2.1
   is_shapes: ^0.4.0
 ```

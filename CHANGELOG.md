@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1
+
+- `Response`: what a person said back to something shown to them, before
+  anyone knows which node it was. It is `Approved`, `HeldOff` or `Proposed`
+  with the text fields their client sent, and has no target and no author,
+  for a module that knows only which message was pressed
+  (https://github.com/intersyntactic/docking_port/pull/1).
+
 ## 0.2.0
 
 - **Breaking:** `Approve` is renamed `Approval`, so the withdrawable shapes
