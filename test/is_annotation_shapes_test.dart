@@ -61,4 +61,19 @@ void main() {
     expect(seen.by, _sam());
     expect(seen, isNot(isA<Withdrawable>()));
   });
+
+  test('a response becomes the annotations it says', () {
+    String annotate(Response response) => switch (response) {
+      Approved() => 'Approval',
+      HeldOff() => 'Seen and Withdrawal<Approval>',
+      Proposed<_Level>(:final proposed) =>
+        'Correction<_Level> ${proposed.level}',
+      Proposed() => 'refused: another value type',
+    };
+    expect(annotate(const Approved()), 'Approval');
+    expect(annotate(const HeldOff()), 'Seen and Withdrawal<Approval>');
+    expect(annotate(const Proposed(_Level(1))), 'Correction<_Level> 1');
+    expect(annotate(const Proposed(_Other(1))), 'refused: another value type');
+    expect(const Approved(), isNot(isA<Withdrawable>()));
+  });
 }

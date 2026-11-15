@@ -15,6 +15,8 @@
 /// - [Correction]: a proposed new value for a node.
 /// - [Approval]: an approval of a node.
 /// - [Seen]: a mark that an actor has seen a node.
+/// - [Response]: what a person said back to something shown to them, before
+///   anyone knows which node it was: [Approved], [HeldOff] or [Proposed].
 ///
 /// A version of a node is what it says: its shape and its fields, without the
 /// whole history its exact id also names. A new pass gives every node a new
@@ -118,4 +120,46 @@ final class Seen {
 
   /// Who saw it.
   final ActorId by;
+}
+
+/// What a person said back to something shown to them, before anyone knows
+/// which node it was: a card press in Teams, a button in Slack.
+///
+/// It has no target and no author. The module that reads it knows only which
+/// message was pressed, so whatever carries the response also carries that
+/// message and who pressed it. Whoever knows which node the message showed
+/// builds the annotations:
+///
+/// - [Approved]: an [Approval] of that node.
+/// - [HeldOff]: a [Seen] of it, and a `Withdrawal<Approval>` of each approval
+///   of theirs that stands.
+/// - [Proposed]: a [Correction] of it, proposing [Proposed.proposed].
+///
+/// It is a thing that happened, so like a [Seen] it is not `Withdrawable`:
+/// a press stays pressed, and what is taken back is the annotation built from
+/// it. The cases are past tense for the same reason, and are named for what
+/// the person said, so any press, button or reply that says it reads the same.
+sealed class Response {
+  const Response();
+}
+
+/// They approved what they were shown.
+final class Approved extends Response {
+  const Approved();
+}
+
+/// They looked at what they were shown and held off on it.
+final class HeldOff extends Response {
+  const HeldOff();
+}
+
+/// They proposed [proposed] as a new value for what they were shown.
+///
+/// [V] is the value type of the shape shown, so the [Correction] built from
+/// it is a `Correction<V>` and binds only where that value type is accepted.
+final class Proposed<V extends Value> extends Response {
+  const Proposed(this.proposed);
+
+  /// The value proposed, of the shown shape's own value type.
+  final V proposed;
 }
