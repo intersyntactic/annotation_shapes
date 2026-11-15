@@ -52,13 +52,13 @@ final class Forecast {
   held off on.
 - `Response`: what a person said back to something shown to them, before
   anyone knows which node it was, such as a Teams card press or a Slack
-  button: `Approved`, `HeldOff`, or `Proposed` with the inputs they filled in,
-  by id. It has no target and no author, and a proposal carries text rather
-  than a `Value`, because which value type it needs depends on the node.
-  Whoever learns which node the message showed builds the annotations from it:
-  an `Approval`; a `Seen` and a `Withdrawal<Approval>` of each of their
-  approvals that stands; or a `Correction<V>`, if the inputs parse as that
-  node's value type `V`, and otherwise nothing.
+  button: `Approved`, `HeldOff`, or `Proposed` with the text fields their
+  client sent, by id. It has no target and no author, and a proposal carries
+  text rather than a `Value`, because which value type it needs depends on the
+  node. Whoever learns which node the message showed builds the annotations
+  from it: an `Approval`; a `Seen` and a `Withdrawal<Approval>` of each of
+  their approvals that stands; or a `Correction<V>`, if the fields its shape
+  names parse as that node's value type `V`, and otherwise nothing.
 
 A version of a node is what it says: its shape and its fields, without the
 whole history its exact id also names. A new pass gives every node a new exact

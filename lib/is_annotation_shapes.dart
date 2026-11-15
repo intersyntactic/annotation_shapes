@@ -154,17 +154,19 @@ final class HeldOff extends Response {
   const HeldOff();
 }
 
-/// They proposed a new value for what they were shown, as the [inputs] they
-/// filled in.
+/// They proposed a new value for what they were shown, in the [inputs] their
+/// client sent with it.
 ///
-/// It carries what they typed, not a [Value]: which value type a correction
-/// needs depends on the shape shown, and that is known only once the node is.
-/// Whoever learns the node parses [inputs] into its shape's value type `V` and
-/// builds a `Correction<V>`, or refuses them if they don't fit. They come from
+/// It carries text, not a [Value]: which value type a correction needs
+/// depends on the shape shown, and that is known only once the node is.
+/// Whoever learns the node reads the ids its shape's fields name, parses them
+/// into its value type `V` and builds a `Correction<V>`, or refuses them if
+/// they don't fit. Other ids may be there too: a client can send what the
+/// person typed and the message's own data as one set. They come from
 /// the person's client and are unchecked until then.
 final class Proposed extends Response {
   Proposed(Map<String, String> inputs) : inputs = Map.unmodifiable(inputs);
 
-  /// Each input they filled in, by its id, with the text it held.
+  /// The text fields their client sent with the response, by id.
   final Map<String, String> inputs;
 }
