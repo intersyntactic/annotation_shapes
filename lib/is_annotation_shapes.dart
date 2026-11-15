@@ -133,7 +133,8 @@ final class Seen {
 /// - [Approved]: an [Approval] of that node.
 /// - [HeldOff]: a [Seen] of it, and a `Withdrawal<Approval>` of each approval
 ///   of theirs that stands.
-/// - [Proposed]: a [Correction] of it, proposing [Proposed.proposed].
+/// - [Proposed]: a [Correction] of it, if [Proposed.inputs] parse as a value
+///   of its shape's value type. If they don't, it is refused.
 ///
 /// It is a thing that happened, so like a [Seen] it is not `Withdrawable`:
 /// a press stays pressed, and what is taken back is the annotation built from
@@ -153,13 +154,17 @@ final class HeldOff extends Response {
   const HeldOff();
 }
 
-/// They proposed [proposed] as a new value for what they were shown.
+/// They proposed a new value for what they were shown, as the [inputs] they
+/// filled in.
 ///
-/// [V] is the value type of the shape shown, so the [Correction] built from
-/// it is a `Correction<V>` and binds only where that value type is accepted.
-final class Proposed<V extends Value> extends Response {
-  const Proposed(this.proposed);
+/// It carries what they typed, not a [Value]: which value type a correction
+/// needs depends on the shape shown, and that is known only once the node is.
+/// Whoever learns the node parses [inputs] into its shape's value type `V` and
+/// builds a `Correction<V>`, or refuses them if they don't fit. They come from
+/// the person's client and are unchecked until then.
+final class Proposed extends Response {
+  Proposed(Map<String, String> inputs) : inputs = Map.unmodifiable(inputs);
 
-  /// The value proposed, of the shown shape's own value type.
-  final V proposed;
+  /// Each input they filled in, by its id, with the text it held.
+  final Map<String, String> inputs;
 }

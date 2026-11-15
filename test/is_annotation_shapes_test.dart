@@ -62,18 +62,41 @@ void main() {
     expect(seen, isNot(isA<Withdrawable>()));
   });
 
-  test('a response becomes the annotations it says', () {
-    String annotate(Response response) => switch (response) {
-      Approved() => 'Approval',
-      HeldOff() => 'Seen and Withdrawal<Approval>',
-      Proposed<_Level>(:final proposed) =>
-        'Correction<_Level> ${proposed.level}',
-      Proposed() => 'refused: another value type',
-    };
-    expect(annotate(const Approved()), 'Approval');
-    expect(annotate(const HeldOff()), 'Seen and Withdrawal<Approval>');
-    expect(annotate(const Proposed(_Level(1))), 'Correction<_Level> 1');
-    expect(annotate(const Proposed(_Other(1))), 'refused: another value type');
-    expect(const Approved(), isNot(isA<Withdrawable>()));
+  test(
+    'a response becomes the annotations it says, once its node is known',
+    () {
+      // The shape shown is known here, so its value type is too.
+      Object annotate(Response response) => switch (response) {
+        Approved() => Approval(target: _target(), by: _sam()),
+        HeldOff() => Seen(target: _target(), by: _sam()),
+        Proposed(:final inputs) => switch (int.tryParse(
+          inputs['level'] ?? '',
+        )) {
+          final level? => Correction(
+            target: _target(),
+            proposed: _Level(level),
+            by: _sam(),
+          ),
+          null => 'refused',
+        },
+      };
+      expect(annotate(const Approved()), isA<Approval>());
+      expect(annotate(const HeldOff()), isA<Seen>());
+      expect(
+        annotate(Proposed({'level': '1'})),
+        isA<Correction<_Level>>().having((c) => c.proposed.level, 'level', 1),
+      );
+      expect(annotate(Proposed({'level': 'high'})), 'refused');
+      expect(annotate(Proposed({})), 'refused');
+      expect(const Approved(), isNot(isA<Withdrawable>()));
+    },
+  );
+
+  test('a proposal holds its inputs as they were sent', () {
+    final typed = {'level': '1'};
+    final proposed = Proposed(typed);
+    typed['level'] = '2';
+    expect(proposed.inputs, {'level': '1'});
+    expect(() => proposed.inputs['level'] = '3', throwsUnsupportedError);
   });
 }
