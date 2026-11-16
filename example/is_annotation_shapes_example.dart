@@ -13,8 +13,8 @@ final class Outlook extends Value {
   final String reason;
 }
 
-/// A forecast: what it is about is its day, and its outlook may change from
-/// one pass to the next without the forecast becoming a different forecast.
+/// A forecast: what it is about is its day, and a later forecast for that day
+/// may change its outlook without becoming a different forecast.
 final class Forecast {
   const Forecast({required this.day, required this.outlook});
   @identity
@@ -42,12 +42,12 @@ void main() {
   if (forecastId == null || anchor == null || sam == null) return;
   if (correctionId == null || correctionAnchor == null) return;
 
-  final correction = Correction(
+  final correction = NodeCorrection(
     target: Target(exact: forecastId, anchor: anchor),
     proposed: const Outlook(Weather.rain, 'the front arrives a day early'),
     by: sam,
   );
-  final approval = Approval(
+  final approval = NodeApproval(
     target: Target(exact: correctionId, anchor: correctionAnchor),
     by: sam,
   );
