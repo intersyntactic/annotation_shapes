@@ -15,7 +15,7 @@
 /// - [Correction]: a proposed new value for a node.
 /// - [Approval]: an approval of a node.
 /// - [Seen]: a mark that an actor has seen a node.
-/// - [Response]: what a person said back to something shown to them, before
+/// - [Verdict]: a person's call on something shown to them, made before
 ///   anyone knows which node it was: [Approved], [HeldOff] or [Proposed].
 ///
 /// A version of a node is what it says: its shape and its fields, without the
@@ -31,7 +31,7 @@
 /// the `Value` a correction proposes, and the `Withdrawal<T>` that takes one
 /// back, come from `is_shapes`.
 ///
-/// It imports only `is_shapes` and `checked_json`, which a [Response] is read
+/// It imports only `is_shapes` and `checked_json`, which a [Verdict] is read
 /// through, so a shape file may import it under import admission's pure list
 /// once they are all on it
 /// (https://github.com/enspyrco/intersyntactic/issues/1046).
@@ -124,11 +124,11 @@ final class Seen {
   final ActorId by;
 }
 
-/// What a person said back to something shown to them, before anyone knows
+/// A person's call on something shown to them, made before anyone knows
 /// which node it was: a card press in Teams, a button in Slack.
 ///
 /// It has no target and no author. The module that reads it knows only which
-/// message was pressed, so whatever carries the response also carries that
+/// message was pressed, so whatever carries the verdict also carries that
 /// message and who pressed it. Whoever knows which node the message showed
 /// builds the annotations:
 ///
@@ -140,20 +140,21 @@ final class Seen {
 ///
 /// It is a thing that happened, so like a [Seen] it is not `Withdrawable`:
 /// a press stays pressed, and what is taken back is the annotation built from
-/// it. The cases are past tense for the same reason, and are named for what
-/// the person said, so any press, button or reply that says it reads the same.
+/// it. The cases are past tense for the same reason, and are named for the
+/// call the person made, so any press, button or reply that makes it reads
+/// the same.
 ///
 /// It travels as JSON in a node's map form,
 /// `{"shape": "<class name>", ...its fields}`, so the process that reads the
 /// press can pass it on already built and the one that builds the annotations
 /// decodes it.
-sealed class Response {
-  const Response();
+sealed class Verdict {
+  const Verdict();
 
-  /// The response [json] holds, read strictly: an unknown shape, or a field
+  /// The verdict [json] holds, read strictly: an unknown shape, or a field
   /// missing, extra or of the wrong type, is a [FormatException].
-  factory Response.fromJson(JsonObject json) {
-    final (response, fields) = switch (json.string('shape')) {
+  factory Verdict.fromJson(JsonObject json) {
+    final (verdict, fields) = switch (json.string('shape')) {
       'Approved' => (const Approved(), const {'shape'}),
       'HeldOff' => (const HeldOff(), const {'shape'}),
       'Proposed' => (
@@ -166,7 +167,7 @@ sealed class Response {
         }),
         const {'shape', 'inputs'},
       ),
-      final shape => throw FormatException('`shape` is not a response: $shape'),
+      final shape => throw FormatException('`shape` is not a verdict: $shape'),
     };
     for (final key in json.keys) {
       if (!fields.contains(key)) {
@@ -175,15 +176,15 @@ sealed class Response {
         );
       }
     }
-    return response;
+    return verdict;
   }
 
-  /// This response in a node's map form, for `jsonEncode`.
+  /// This verdict in a node's map form, for `jsonEncode`.
   JsonObject toJson();
 }
 
 /// They approved what they were shown.
-final class Approved extends Response {
+final class Approved extends Verdict {
   const Approved();
 
   @override
@@ -191,7 +192,7 @@ final class Approved extends Response {
 }
 
 /// They looked at what they were shown and held off on it.
-final class HeldOff extends Response {
+final class HeldOff extends Verdict {
   const HeldOff();
 
   @override
@@ -208,10 +209,10 @@ final class HeldOff extends Response {
 /// they don't fit. Other ids may be there too: a client can send what the
 /// person typed and the message's own data as one set. They come from
 /// the person's client and are unchecked until then.
-final class Proposed extends Response {
+final class Proposed extends Verdict {
   Proposed(Map<String, String> inputs) : inputs = Map.unmodifiable(inputs);
 
-  /// The text fields their client sent with the response, by id.
+  /// The text fields their client sent with the verdict, by id.
   final Map<String, String> inputs;
 
   @override

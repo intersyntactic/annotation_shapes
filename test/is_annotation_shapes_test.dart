@@ -65,35 +65,30 @@ void main() {
     expect(seen, isNot(isA<Withdrawable>()));
   });
 
-  test(
-    'a response becomes the annotations it says, once its node is known',
-    () {
-      // The shape shown is known here, so its value type is too.
-      Object annotate(Response response) => switch (response) {
-        Approved() => Approval(target: _target(), by: _sam()),
-        HeldOff() => Seen(target: _target(), by: _sam()),
-        Proposed(:final inputs) => switch (int.tryParse(
-          inputs['level'] ?? '',
-        )) {
-          final level? => Correction(
-            target: _target(),
-            proposed: _Level(level),
-            by: _sam(),
-          ),
-          null => 'refused',
-        },
-      };
-      expect(annotate(const Approved()), isA<Approval>());
-      expect(annotate(const HeldOff()), isA<Seen>());
-      expect(
-        annotate(Proposed({'level': '1'})),
-        isA<Correction<_Level>>().having((c) => c.proposed.level, 'level', 1),
-      );
-      expect(annotate(Proposed({'level': 'high'})), 'refused');
-      expect(annotate(Proposed({})), 'refused');
-      expect(const Approved(), isNot(isA<Withdrawable>()));
-    },
-  );
+  test('a verdict becomes the annotations it says, once its node is known', () {
+    // The shape shown is known here, so its value type is too.
+    Object annotate(Verdict verdict) => switch (verdict) {
+      Approved() => Approval(target: _target(), by: _sam()),
+      HeldOff() => Seen(target: _target(), by: _sam()),
+      Proposed(:final inputs) => switch (int.tryParse(inputs['level'] ?? '')) {
+        final level? => Correction(
+          target: _target(),
+          proposed: _Level(level),
+          by: _sam(),
+        ),
+        null => 'refused',
+      },
+    };
+    expect(annotate(const Approved()), isA<Approval>());
+    expect(annotate(const HeldOff()), isA<Seen>());
+    expect(
+      annotate(Proposed({'level': '1'})),
+      isA<Correction<_Level>>().having((c) => c.proposed.level, 'level', 1),
+    );
+    expect(annotate(Proposed({'level': 'high'})), 'refused');
+    expect(annotate(Proposed({})), 'refused');
+    expect(const Approved(), isNot(isA<Withdrawable>()));
+  });
 
   test('a proposal holds its inputs as they were sent', () {
     final typed = {'level': '1'};
@@ -103,8 +98,8 @@ void main() {
     expect(() => proposed.inputs['level'] = '3', throwsUnsupportedError);
   });
 
-  group('a response as JSON', () {
-    Response read(String text) => Response.fromJson(JsonObject.decode(text));
+  group('a verdict as JSON', () {
+    Verdict read(String text) => Verdict.fromJson(JsonObject.decode(text));
 
     test('is written in a node\'s map form, to the byte', () {
       expect(jsonEncode(const Approved()), '{"shape":"Approved"}');
@@ -115,7 +110,7 @@ void main() {
       );
     });
 
-    test('reads back as the response it was', () {
+    test('reads back as the verdict it was', () {
       expect(read('{"shape":"Approved"}'), isA<Approved>());
       expect(read('{"shape":"HeldOff"}'), isA<HeldOff>());
       expect(

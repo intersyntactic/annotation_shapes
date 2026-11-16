@@ -1,8 +1,11 @@
 # Changelog
 
-## 0.2.2
+## 0.3.0
 
-- `Response.fromJson` and `toJson()`: a response as JSON in a node's map
+- **Breaking:** `Response` is renamed `Verdict`: a person's call on something
+  shown to them. The cases, `Approved`, `HeldOff` and `Proposed`, keep their
+  names.
+- `Verdict.fromJson` and `toJson()`: a verdict as JSON in a node's map
   form, `{"shape": "<class name>", ...its fields}`, so it can travel already
   built from the process that reads a press to the one that builds its
   annotations. Reading is strict: an unknown shape, or a field missing, extra

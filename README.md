@@ -50,7 +50,7 @@ final class Forecast {
 - `Seen`: a mark, by an actor, that they have seen a node and considered that
   version. A version they have seen and not approved is one they looked at and
   held off on.
-- `Response`: what a person said back to something shown to them, before
+- `Verdict`: a person's call on something shown to them, made before
   anyone knows which node it was, such as a Teams card press or a Slack
   button: `Approved`, `HeldOff`, or `Proposed` with the text fields their
   client sent, by id. It has no target and no author, and a proposal carries
@@ -60,7 +60,7 @@ final class Forecast {
   their approvals that stands; or a `Correction<V>`, if the fields its shape
   names parse as that node's value type `V`, and otherwise nothing. It
   travels as JSON in a node's map form, `{"shape": "Proposed", "inputs":
-  {...}}`: `toJson()` writes it, and `Response.fromJson` reads it strictly,
+  {...}}`: `toJson()` writes it, and `Verdict.fromJson` reads it strictly,
   refusing an unknown shape and a field missing, extra or of the wrong type.
 
 A version of a node is what it says: its shape and its fields, without the
@@ -94,6 +94,6 @@ A module that annotates also names `Target` and `ActorId`, so it depends on
 
 ```yaml
 dependencies:
-  is_annotation_shapes: ^0.2.2
+  is_annotation_shapes: ^0.3.0
   is_shapes: ^0.4.0
 ```
