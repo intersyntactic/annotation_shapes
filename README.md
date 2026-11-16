@@ -58,7 +58,10 @@ final class Forecast {
   node. Whoever learns which node the message showed builds the annotations
   from it: an `Approval`; a `Seen` and a `Withdrawal<Approval>` of each of
   their approvals that stands; or a `Correction<V>`, if the fields its shape
-  names parse as that node's value type `V`, and otherwise nothing.
+  names parse as that node's value type `V`, and otherwise nothing. It
+  travels as JSON in a node's map form, `{"shape": "Proposed", "inputs":
+  {...}}`: `toJson()` writes it, and `Response.fromJson` reads it strictly,
+  refusing an unknown shape and a field missing, extra or of the wrong type.
 
 A version of a node is what it says: its shape and its fields, without the
 whole history its exact id also names. A new pass gives every node a new exact
@@ -79,7 +82,8 @@ value.
 
 A shape file may import only what import admission's pure list allows
 ([#1046](https://github.com/enspyrco/intersyntactic/issues/1046)). This
-package imports only `is_shapes`, and both have to be added to that list.
+package imports only `is_shapes` and `checked_json`, and all three have to be
+on that list.
 `test/pure_list_test.dart` holds it to the list, reading every branch of every
 import and export from the parse tree.
 
@@ -90,6 +94,6 @@ A module that annotates also names `Target` and `ActorId`, so it depends on
 
 ```yaml
 dependencies:
-  is_annotation_shapes: ^0.2.1
+  is_annotation_shapes: ^0.2.2
   is_shapes: ^0.4.0
 ```

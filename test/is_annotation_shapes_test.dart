@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:checked_json/checked_json.dart';
 import 'package:is_annotation_shapes/is_annotation_shapes.dart';
 import 'package:is_shapes/is_shapes.dart';
 import 'package:test/test.dart';
@@ -98,5 +101,59 @@ void main() {
     typed['level'] = '2';
     expect(proposed.inputs, {'level': '1'});
     expect(() => proposed.inputs['level'] = '3', throwsUnsupportedError);
+  });
+
+  group('a response as JSON', () {
+    Response read(String text) => Response.fromJson(JsonObject.decode(text));
+
+    test('is written in a node\'s map form, to the byte', () {
+      expect(jsonEncode(const Approved()), '{"shape":"Approved"}');
+      expect(jsonEncode(const HeldOff()), '{"shape":"HeldOff"}');
+      expect(
+        jsonEncode(Proposed({'level': '1', 'why': 'too high'})),
+        '{"shape":"Proposed","inputs":{"level":"1","why":"too high"}}',
+      );
+    });
+
+    test('reads back as the response it was', () {
+      expect(read('{"shape":"Approved"}'), isA<Approved>());
+      expect(read('{"shape":"HeldOff"}'), isA<HeldOff>());
+      expect(
+        read(jsonEncode(Proposed({'level': '1'}))),
+        isA<Proposed>().having((p) => p.inputs, 'inputs', {'level': '1'}),
+      );
+      expect(
+        read('{"shape":"Proposed","inputs":{}}'),
+        isA<Proposed>().having((p) => p.inputs, 'inputs', isEmpty),
+      );
+    });
+
+    test('read back, a proposal\'s inputs refuse changes', () {
+      final proposed = read('{"shape":"Proposed","inputs":{"a":"1"}}');
+      expect(
+        () => (proposed as Proposed).inputs['a'] = '2',
+        throwsUnsupportedError,
+      );
+    });
+
+    final refused = {
+      'an unknown shape': '{"shape":"Approve"}',
+      'another package\'s shape': '{"shape":"UserSaid"}',
+      'no shape': '{}',
+      'a shape that is not a string': '{"shape":1}',
+      'an extra field': '{"shape":"Approved","by":"example:sam"}',
+      'an extra field on a proposal':
+          '{"shape":"Proposed","inputs":{},"target":"x"}',
+      'a proposal with no inputs': '{"shape":"Proposed"}',
+      'inputs that are not an object': '{"shape":"Proposed","inputs":[]}',
+      'null inputs': '{"shape":"Proposed","inputs":null}',
+      'an input that is not text': '{"shape":"Proposed","inputs":{"level":1}}',
+      'a null input': '{"shape":"Proposed","inputs":{"level":null}}',
+    };
+    for (final MapEntry(key: what, value: text) in refused.entries) {
+      test('refuses $what', () {
+        expect(() => read(text), throwsFormatException);
+      });
+    }
   });
 }

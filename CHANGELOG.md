@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.2
+
+- `Response.fromJson` and `toJson()`: a response as JSON in a node's map
+  form, `{"shape": "<class name>", ...its fields}`, so it can travel already
+  built from the process that reads a press to the one that builds its
+  annotations. Reading is strict: an unknown shape, or a field missing, extra
+  or of the wrong type, is a `FormatException`. Depends on `checked_json`.
+
 ## 0.2.1
 
 - `Response`: what a person said back to something shown to them, before

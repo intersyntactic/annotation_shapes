@@ -31,11 +31,13 @@
 /// the `Value` a correction proposes, and the `Withdrawal<T>` that takes one
 /// back, come from `is_shapes`.
 ///
-/// It imports only `is_shapes`, so a shape file may import it under import
-/// admission's pure list once both are on it
+/// It imports only `is_shapes` and `checked_json`, which a [Response] is read
+/// through, so a shape file may import it under import admission's pure list
+/// once they are all on it
 /// (https://github.com/enspyrco/intersyntactic/issues/1046).
 library;
 
+import 'package:checked_json/checked_json.dart';
 import 'package:is_shapes/is_shapes.dart';
 
 /// A thought on the node at [target], by [by], proposing no change to it.
@@ -140,18 +142,60 @@ final class Seen {
 /// a press stays pressed, and what is taken back is the annotation built from
 /// it. The cases are past tense for the same reason, and are named for what
 /// the person said, so any press, button or reply that says it reads the same.
+///
+/// It travels as JSON in a node's map form,
+/// `{"shape": "<class name>", ...its fields}`, so the process that reads the
+/// press can pass it on already built and the one that builds the annotations
+/// decodes it.
 sealed class Response {
   const Response();
+
+  /// The response [json] holds, read strictly: an unknown shape, or a field
+  /// missing, extra or of the wrong type, is a [FormatException].
+  factory Response.fromJson(JsonObject json) {
+    final (response, fields) = switch (json.string('shape')) {
+      'Approved' => (const Approved(), const {'shape'}),
+      'HeldOff' => (const HeldOff(), const {'shape'}),
+      'Proposed' => (
+        Proposed({
+          for (final MapEntry(:key, :value)
+              in json.object('inputs').asUncheckedMap().entries)
+            key: value is String
+                ? value
+                : throw JsonFieldException('inputs.$key', 'a string'),
+        }),
+        const {'shape', 'inputs'},
+      ),
+      final shape => throw FormatException('`shape` is not a response: $shape'),
+    };
+    for (final key in json.keys) {
+      if (!fields.contains(key)) {
+        throw FormatException(
+          '`$key` is not a field of ${json.string('shape')}',
+        );
+      }
+    }
+    return response;
+  }
+
+  /// This response in a node's map form, for `jsonEncode`.
+  JsonObject toJson();
 }
 
 /// They approved what they were shown.
 final class Approved extends Response {
   const Approved();
+
+  @override
+  JsonObject toJson() => const JsonObject.of({'shape': 'Approved'});
 }
 
 /// They looked at what they were shown and held off on it.
 final class HeldOff extends Response {
   const HeldOff();
+
+  @override
+  JsonObject toJson() => const JsonObject.of({'shape': 'HeldOff'});
 }
 
 /// They proposed a new value for what they were shown, in the [inputs] their
@@ -169,4 +213,7 @@ final class Proposed extends Response {
 
   /// The text fields their client sent with the response, by id.
   final Map<String, String> inputs;
+
+  @override
+  JsonObject toJson() => JsonObject.of({'shape': 'Proposed', 'inputs': inputs});
 }
