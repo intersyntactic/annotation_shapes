@@ -27,7 +27,8 @@ final class Outlook extends Value {
   final String reason;
 }
 
-/// A forecast is about its day; its outlook may change from pass to pass.
+/// A forecast is about its day; a later forecast for that day may change its
+/// outlook.
 final class Forecast {
   const Forecast({required this.day, required this.outlook});
   @identity
@@ -67,12 +68,15 @@ final class Forecast {
   strictly, refusing an unknown shape and a field missing, extra or of the
   wrong type.
 
-A version of a node is what it says: its shape and its fields, without the
-whole history its exact id also names. A new pass gives every node a new exact
-id, and a new version only where something changed. An annotation is of the
-version at its target's exact id, and holds for a later pass while the node now
-at its anchor says the same. Whatever an actor has written of a version, on any
-pass and withdrawn or not, shows they considered it.
+A node is named three ways, as
+[`is_shapes`](https://github.com/intersyntactic/shapes) sets out: its anchor,
+what it is about; its version, what it says, its shape and all its fields; and
+its exact id, which one exactly, naming its whole history. A node is never
+changed. A later node at its anchor has a new exact id, whatever made it, and
+is a new version only if it says something different. An annotation is of the
+version at its target's exact id, and holds for a later node at its anchor with
+the same version. Whatever an actor has written of a version, at any exact id
+and withdrawn or not, shows they considered it.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
 back with a `Withdrawal`, and a withdrawal is final. A `NodeSeenMark` is not:

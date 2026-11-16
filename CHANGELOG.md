@@ -15,6 +15,10 @@
   builds its annotations. Reading is strict: an unknown shape, or a field
   missing, extra or of the wrong type, is a `FormatException`. Depends on
   `checked_json`.
+- Docs: "pass" is gone. A node is named three ways, by its anchor (what it
+  is about), its version (what it says) and its exact id (which one
+  exactly), in `is_shapes`' words, and each rule is a comparison of two:
+  an annotation holds for a later node at its anchor with the same version.
 - `VerdictOnShownMessage.shapeNames`, built from each case's `shapeName`,
   which `fromJson` matches on: every `shape` a verdict decodes from, for
   checking that no two packages' node shapes collide.
