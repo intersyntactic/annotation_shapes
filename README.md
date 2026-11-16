@@ -10,7 +10,7 @@ shapes needs [`is_shapes`](https://github.com/intersyntactic/shapes) alone.
 A shape is a Dart type, and binding an offering to an acceptor is the analyzer
 checking that one type can be assigned to the other
 ([#1069](https://github.com/enspyrco/intersyntactic/issues/1069)). A
-Dart class is its declaration, so if two modules each declared an `Approval`,
+Dart class is its declaration, so if two modules each declared a `NodeApproval`,
 they would hold two types, and one module's approval could never bind where
 the other waits for one. They are declared once, here, for every module whose
 nodes are annotated
@@ -35,33 +35,37 @@ final class Forecast {
   final Outlook outlook;
 }
 
-// An acceptor that applies corrections to forecasts takes Correction<Outlook>.
+// An acceptor that applies corrections to forecasts takes
+// NodeCorrection<Outlook>.
 ```
 
 ## What is here
 
-- `Comment`: a thought on a node, by an actor, proposing no change to it.
-- `Correction<V extends Value>`: a proposed new value for a node, of that
-  node's own value type. An acceptor for `Correction<Outlook>` refuses a
+- `NodeComment`: a thought on a node, by an actor, proposing no change to it.
+- `NodeCorrection<V extends Value>`: a proposed new value for a node, of that
+  node's own value type. An acceptor for `NodeCorrection<Outlook>` refuses a
   correction to any other value type at composition, even one with the same
   fields. It proposes; the corrected node is never rewritten.
-- `Approval`: an approval of a node, by an actor. It is never changed once
-  written; it is taken back by a later `Withdrawal<Approval>` from its author.
-- `Seen`: a mark, by an actor, that they have seen a node and considered that
-  version. A version they have seen and not approved is one they looked at and
-  held off on.
-- `Verdict`: a person's call on something shown to them, made before
-  anyone knows which node it was, such as a Teams card press or a Slack
-  button: `Approved`, `HeldOff`, or `Proposed` with the text fields their
-  client sent, by id. It has no target and no author, and a proposal carries
-  text rather than a `Value`, because which value type it needs depends on the
-  node. Whoever learns which node the message showed builds the annotations
-  from it: an `Approval`; a `Seen` and a `Withdrawal<Approval>` of each of
-  their approvals that stands; or a `Correction<V>`, if the fields its shape
-  names parse as that node's value type `V`, and otherwise nothing. It
-  travels as JSON in a node's map form, `{"shape": "Proposed", "inputs":
-  {...}}`: `toJson()` writes it, and `Verdict.fromJson` reads it strictly,
-  refusing an unknown shape and a field missing, extra or of the wrong type.
+- `NodeApproval`: an approval of a node, by an actor. It is never changed
+  once written; it is taken back by a later `Withdrawal<NodeApproval>` from
+  its author.
+- `NodeSeenMark`: a mark, by an actor, that they have seen a node and
+  considered that version. A version they have seen and not approved is one
+  they looked at and held off on.
+- `VerdictOnShownMessage`: a person's call on something shown to them, made
+  before anyone knows which node it was, such as a Teams card press or a Slack
+  button: `ApprovedVerdict`, `HeldOffVerdict`, or `ProposedCorrectionVerdict`
+  with the text fields their client sent, by id. It has no target and no
+  author, and a proposal carries text rather than a `Value`, because which
+  value type it needs depends on the node. Whoever learns which node the
+  message showed builds the annotations from it: a `NodeApproval`; a
+  `NodeSeenMark` and a `Withdrawal<NodeApproval>` of each of their approvals
+  that stands; or a `NodeCorrection<V>`, if the fields its shape names parse
+  as that node's value type `V`, and otherwise nothing. It travels as JSON in
+  a node's map form, `{"shape": "ProposedCorrectionVerdict", "inputs": {...}}`:
+  `toJson()` writes it, and `VerdictOnShownMessage.fromJson` reads it
+  strictly, refusing an unknown shape and a field missing, extra or of the
+  wrong type.
 
 A version of a node is what it says: its shape and its fields, without the
 whole history its exact id also names. A new pass gives every node a new exact
@@ -71,12 +75,12 @@ at its anchor says the same. Whatever an actor has written of a version, on any
 pass and withdrawn or not, shows they considered it.
 
 A comment, a correction or an approval is `Withdrawable`: its author can take it
-back with a `Withdrawal`, and a withdrawal is final. A `Seen` is not: what has
-been seen stays seen. What they point at (`Target`), who wrote them (`ActorId`),
-the `Value` a correction proposes, and the `Withdrawal<T>` that takes one back
-all come from `is_shapes`. `Value` is there, not here, because it is
-`@identity`'s other half: every field a shape doesn't mark as identity is its
-value.
+back with a `Withdrawal`, and a withdrawal is final. A `NodeSeenMark` is not:
+what has been seen stays seen. What they point at (`Target`), who wrote them
+(`ActorId`), the `Value` a correction proposes, and the `Withdrawal<T>` that
+takes one back all come from `is_shapes`. `Value` is there, not here, because
+it is `@identity`'s other half: every field a shape doesn't mark as identity is
+its value.
 
 ## The pure list
 

@@ -42,12 +42,12 @@ void main() {
   if (forecastId == null || anchor == null || sam == null) return;
   if (correctionId == null || correctionAnchor == null) return;
 
-  final correction = Correction(
+  final correction = NodeCorrection(
     target: Target(exact: forecastId, anchor: anchor),
     proposed: const Outlook(Weather.rain, 'the front arrives a day early'),
     by: sam,
   );
-  final approval = Approval(
+  final approval = NodeApproval(
     target: Target(exact: correctionId, anchor: correctionAnchor),
     by: sam,
   );
