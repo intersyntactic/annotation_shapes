@@ -151,13 +151,23 @@ final class Seen {
 sealed class Verdict {
   const Verdict();
 
+  /// Every `shape` a [Verdict] may decode from, for whoever checks that no
+  /// two packages' top-level node shapes collide (docking_station,
+  /// 2026-11-16). [Verdict.fromJson] matches on these same constants, so the
+  /// set and the decoder can't drift apart.
+  static const Set<String> shapeNames = {
+    Approved.shapeName,
+    HeldOff.shapeName,
+    Proposed.shapeName,
+  };
+
   /// The verdict [json] holds, read strictly: an unknown shape, or a field
   /// missing, extra or of the wrong type, is a [FormatException].
   factory Verdict.fromJson(JsonObject json) {
     final (verdict, fields) = switch (json.string('shape')) {
-      'Approved' => (const Approved(), const {'shape'}),
-      'HeldOff' => (const HeldOff(), const {'shape'}),
-      'Proposed' => (
+      Approved.shapeName => (const Approved(), const {'shape'}),
+      HeldOff.shapeName => (const HeldOff(), const {'shape'}),
+      Proposed.shapeName => (
         Proposed({
           for (final MapEntry(:key, :value)
               in json.object('inputs').asUncheckedMap().entries)
@@ -187,16 +197,22 @@ sealed class Verdict {
 final class Approved extends Verdict {
   const Approved();
 
+  /// The `shape` this decodes and encodes as.
+  static const String shapeName = 'Approved';
+
   @override
-  JsonObject toJson() => const JsonObject.of({'shape': 'Approved'});
+  JsonObject toJson() => const JsonObject.of({'shape': shapeName});
 }
 
 /// They looked at what they were shown and held off on it.
 final class HeldOff extends Verdict {
   const HeldOff();
 
+  /// The `shape` this decodes and encodes as.
+  static const String shapeName = 'HeldOff';
+
   @override
-  JsonObject toJson() => const JsonObject.of({'shape': 'HeldOff'});
+  JsonObject toJson() => const JsonObject.of({'shape': shapeName});
 }
 
 /// They proposed a new value for what they were shown, in the [inputs] their
@@ -215,6 +231,9 @@ final class Proposed extends Verdict {
   /// The text fields their client sent with the verdict, by id.
   final Map<String, String> inputs;
 
+  /// The `shape` this decodes and encodes as.
+  static const String shapeName = 'Proposed';
+
   @override
-  JsonObject toJson() => JsonObject.of({'shape': 'Proposed', 'inputs': inputs});
+  JsonObject toJson() => JsonObject.of({'shape': shapeName, 'inputs': inputs});
 }

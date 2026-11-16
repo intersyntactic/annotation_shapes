@@ -101,6 +101,23 @@ void main() {
   group('a verdict as JSON', () {
     Verdict read(String text) => Verdict.fromJson(JsonObject.decode(text));
 
+    test('names every shape it writes, and reads each one it names', () {
+      final written = {
+        for (final verdict in [const Approved(), const HeldOff(), Proposed({})])
+          verdict.toJson().string('shape'),
+      };
+      expect(Verdict.shapeNames, written);
+      for (final name in Verdict.shapeNames) {
+        final json = name == Proposed.shapeName
+            ? {'shape': name, 'inputs': <String, Object?>{}}
+            : {'shape': name};
+        expect(
+          Verdict.fromJson(JsonObject.of(json)).toJson().string('shape'),
+          name,
+        );
+      }
+    });
+
     test('is written in a node\'s map form, to the byte', () {
       expect(jsonEncode(const Approved()), '{"shape":"Approved"}');
       expect(jsonEncode(const HeldOff()), '{"shape":"HeldOff"}');

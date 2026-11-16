@@ -10,6 +10,10 @@
   built from the process that reads a press to the one that builds its
   annotations. Reading is strict: an unknown shape, or a field missing, extra
   or of the wrong type, is a `FormatException`. Depends on `checked_json`.
+- `Verdict.shapeNames`, built from `Approved.shapeName`, `HeldOff.shapeName`
+  and `Proposed.shapeName`, which `fromJson` matches on: every `shape` a
+  verdict decodes from, for checking that no two packages' node shapes
+  collide.
 
 ## 0.2.1
 
