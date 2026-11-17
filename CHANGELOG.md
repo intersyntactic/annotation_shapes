@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.2
+
+- Depends on `is_shapes` `>=0.4.0 <0.7.0`, so it resolves beside 0.6.0,
+  which removes `RendererId`. This package doesn't use `RendererId`.
+
 ## 0.3.1
 
 - Depends on `is_shapes` `>=0.4.0 <0.6.0`, so it resolves beside 0.5.0, where
