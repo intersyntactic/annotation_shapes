@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.1
+
+- Depends on `is_shapes` `>=0.4.0 <0.6.0`, so it resolves beside 0.5.0, where
+  `JourneyId` is `MissionId` and `JourneyPathId` is `TrajectoryId`. This
+  package uses none of the names 0.5.0 renamed or removed.
+
 ## 0.3.0
 
 - **Breaking:** every type is named for what it is. The annotations are

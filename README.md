@@ -102,6 +102,6 @@ A module that annotates also names `Target` and `ActorId`, so it depends on
 
 ```yaml
 dependencies:
-  is_annotation_shapes: ^0.3.0
-  is_shapes: ^0.4.0
+  is_annotation_shapes: ^0.3.1
+  is_shapes: ^0.5.0
 ```
